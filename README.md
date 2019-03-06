@@ -222,9 +222,9 @@ Answer the following questions
 type Talk @model {
   id: ID!
   name: String!
-  description: String
+  description: String!
   speakerName: String!
-  speakerBio: String
+  speakerBio: String!
 }
 ```
 
@@ -351,7 +351,7 @@ async componentDidMount() {
 // import the mutation
 import { createTalk as CreateTalk } from './graphql/mutations'
 
-// create initial state
+// update initial state
 state = {
   name: '', description: '', speakerName: '', speakerBio: '', talks: []
 }
@@ -414,24 +414,24 @@ To do so, we need to define the subscription, listen for the subscription, & upd
 
 ```js
 // import the subscription
-import { onCreatePet as OnCreatePet } from './graphql/subscriptions'
+import { onCreateTalk as OnCreateTalk } from './graphql/subscriptions'
 
 // subscribe in componentDidMount
 API.graphql(
-  graphqlOperation(OnCreatePet)
+  graphqlOperation(OnCreateTalk)
 ).subscribe({
     next: (eventData) => {
       console.log('eventData', eventData)
-      const pet = eventData.value.data.onCreatePet
-      const pets = [
-        ...this.state.pets.filter(p => {
-          const val1 = p.name + p.description
-          const val2 = pet.name + pet.description
+      const talk = eventData.value.data.onCreateTalk
+      const talks = [
+        ...this.state.talks.filter(t => {
+          const val1 = t.name + t.description
+          const val2 = talk.name + talk.description
           return val1 !== val2
         }),
-        pet
+        talk
       ]
-      this.setState({ pets })
+      this.setState({ talks })
     }
 });
 ```
@@ -456,7 +456,7 @@ Now, we can only access the API with a logged in user.
 
 _Let's how how we can access the user's identity in the resolver._
 
-To do so, open the AWS AppSync dashboard for the API, click __Schema__, & open the resolver for the `createPet` mutation.
+To do so, open the AWS AppSync dashboard for the API, click __Schema__, & open the resolver for the `createTalk` mutation.
 
 Here in the __Request mapping template__, update the resolver to add the following:
 
@@ -467,7 +467,7 @@ $util.qr($context.args.input.put("username", $context.identity.username))
 
 Now when we create items, the user's identity is stored with each request.
 
-Next, we need to add an index on the table holding the pet data. Open the Data Sources tab & click on the DynamoDB table link. From the DynamoDB table view, click on __indexes__ & __Create Index__.
+Next, we need to add an index on the table holding the talk data. Open the Data Sources tab & click on the DynamoDB table link. From the DynamoDB table view, click on __indexes__ & __Create Index__.
 
 Here, create a new index. The partition key should be __userId__ & the index name needs to be __userId-index__.
 
@@ -639,14 +639,13 @@ You can create multiple environments for your application in which to create & t
 
 When you create a new environment from an existing environment, you are given a copy of the entire backend application stack from the original project. When you make changes in the new environment, you are then able to test these new changes in the new environment & merge only the changes that have been made since the new environment was created back into the original environment.
 
-Let's take a look at how to create a new environment. In this new environment, we'll re-configure the GraphQL Schema to have another field for the pet owner.
+Let's take a look at how to create a new environment. In this new environment, we'll re-configure the GraphQL Schema to not require the speaker's bio.
 
-First, we'll initialize a new environment using `amplify init`:
+First, we'll initialize a new environment using `amplify env add`:
 
 ```sh
 amplify init
 ```
-
 - Do you want to use an existing environment? __N__
 - Enter a name for the environment: __apiupdate__
 - Do you want to use an AWS profile? __Y__
@@ -663,14 +662,15 @@ amplify env list
 | *apiupdate   |
 ```
 
-Now we can update the GraphQL Schema in `amplify/backend/api/GraphQLPets/schema.graphql` to the following (adding the owner field):
+Now we can update the GraphQL Schema in `amplify/backend/api/graphqlmeetup/schema.graphql` to the following (updating the speakerBio field to be optional):
 
 ```graphql
-type Pet @model {
+type Talk @model {
   id: ID!
   name: String!
   description: String!
-  owner: String!
+  speakerName: String!
+  speakerBio: String
 }
 ```
 
