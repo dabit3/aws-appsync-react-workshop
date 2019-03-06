@@ -9,7 +9,6 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [Authentication](https://github.com/dabit3/aws-amplify-workshop-react#adding-authentication)
 - [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-amplify-workshop-react#adding-a-graphql-api)
 - [Multiple Environments](https://github.com/dabit3/aws-amplify-workshop-react#working-with-multiple-environments)
-- [Deploying via the Amplify Console](https://github.com/dabit3/aws-amplify-workshop-react#amplify-console)
 - [Removing / Deleting Services](https://github.com/dabit3/aws-amplify-workshop-react#removing-services)
 
 ## Getting Started - Creating the React Application
@@ -579,53 +578,6 @@ In the next screen, we'll create a new role & use this role to allow the Amplify
 Finally, we can click __Save and Deploy__ to deploy our application!
 
 Now, we can push updates to Master to update our application.
-
-
-## Adding Analytics
-
-To add analytics, we can use the following command:
-
-```sh
-amplify add analytics
-```
-
-> Next, we'll be prompted for the following:
-
-- Provide your pinpoint resource name: __amplifyanalytics__   
-- Apps need authorization to send analytics events. Do you want to allow guest/unauthenticated users to send analytics events (recommended when getting started)? __Y__   
-- overwrite YOURFILEPATH-cloudformation-template.yml __Y__
-
-### Recording events
-
-Now that the service has been created we can now begin recording events.
-
-To record analytics events, we need to import the `Analytics` class from Amplify & then call `Analytics.record`:
-
-```js
-import { Analytics } from 'aws-amplify'
-
-state = {username: ''}
-
-async componentDidMount() {
-  try {
-    const user = await Auth.currentAuthenticatedUser()
-    this.setState({ username: user.username })
-  } catch (err) {
-    console.log('error getting user: ', err)
-  }
-}
-
-recordEvent = () => {
-  Analytics.record({
-    name: 'My test event',
-    attributes: {
-      username: this.state.username
-    }
-  })
-}
-
-<button onClick={this.recordEvent}>Record Event</button>
-```
 
 ## Removing Services
 
