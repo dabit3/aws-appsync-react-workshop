@@ -233,7 +233,7 @@ amplify push
 ```
 
 - Do you want to generate code for your newly created GraphQL API __Y__
-- Choose the code generation language target: __JavaScript__
+- Choose the code generation language target: __javascript__
 - Enter the file name pattern of graphql queries, mutations and subscriptions: __(src/graphql/**/*.js)__
 - Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? __Y__
 ? Enter maximum statement depth [increase from default if your schema is deeply nested] __2__
