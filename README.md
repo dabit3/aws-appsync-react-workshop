@@ -45,7 +45,7 @@ yarn add aws-amplify aws-amplify-react
 Next, we'll install the AWS Amplify CLI:
 
 ```bash
-npm install -g @aws-amplify/cli@multienv
+npm install -g @aws-amplify/cli
 ```
 
 Now we need to configure the CLI with our credentials:
