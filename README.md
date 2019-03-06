@@ -270,7 +270,7 @@ query listTalks {
       id
       name
       description
-      speakeName
+      speakerName
       speakerBio
     }
   }
@@ -290,7 +290,7 @@ query listTalks {
       id
       name
       description
-      speakeName
+      speakerName
       speakerBio
     }
   }
@@ -311,20 +311,20 @@ To do so, we need to define the query, execute the query, store the data in our 
 import { API, graphqlOperation } from 'aws-amplify'
 
 // import query
-import { listTalks as ListPets } from './graphql/queries'
+import { listTalks as ListTalks } from './graphql/queries'
 
 // define some state to hold the data returned from the API
 state = {
-  pets: []
+  talks: []
 }
 
 // execute the query in componentDidMount
 async componentDidMount() {
   try {
-    const pets = await API.graphql(graphqlOperation(ListPets))
-    console.log('pets:', pets)
+    const talkData = await API.graphql(graphqlOperation(ListTalks))
+    console.log('talkData:', talkData)
     this.setState({
-      pets: pets.data.listPets.items
+      talks: talkData.data.ListTalks.items
     })
   } catch (err) {
     console.log('error fetching pets...', err)
@@ -333,10 +333,11 @@ async componentDidMount() {
 
 // add UI in render method to show data
   {
-    this.state.pets.map((pet, index) => (
+    this.state.talks.map((talk, index) => (
       <div key={index}>
-        <h3>{pet.name}</h3>
-        <p>{pet.description}</p>
+        <h3>{talk.speakerName}</h3>
+        <h5>{talk.name}</h5>
+        <p>{talk.description}</p>
       </div>
     ))
   }
