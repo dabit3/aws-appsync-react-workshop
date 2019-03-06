@@ -209,7 +209,7 @@ amplify add api
 Answer the following questions
 
 - Please select from one of the above mentioned services __GraphQL__   
-- Provide API name: __GraphqlMeetup__   
+- Provide API name: __graphqlmeetup__   
 - Choose an authorization type for the API __API key__   
 - Do you have an annotated GraphQL schema? __N__   
 - Do you want a guided schema creation? __Y__   
@@ -238,6 +238,7 @@ amplify push
 - Choose the code generation language target: __JavaScript__
 - Enter the file name pattern of graphql queries, mutations and subscriptions: __(src/graphql/**/*.js)__
 - Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? __Y__
+? Enter maximum statement depth [increase from default if your schema is deeply nested] __2__
 
 > To view the new AWS AppSync API at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/appsync](https://console.aws.amazon.com/appsync). Also be sure that your region is set correctly.
 
