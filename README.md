@@ -499,7 +499,7 @@ Let's take a look at how to create a new environment. In this new environment, w
 First, we'll initialize a new environment using `amplify env add`:
 
 ```sh
-amplify init
+amplify env add
 ```
 - Do you want to use an existing environment? __N__
 - Enter a name for the environment: __apiupdate__
@@ -548,6 +548,13 @@ amplify push
 - Do you want to update code for your updated GraphQL API? __Y__
 - Do you want to generate GraphQL statements? __Y__
 
+### Removing an environment
+
+To remove an environment, run the `amplify env remove <envname>` command:
+
+```sh
+amplify env remove apiupdate
+```
 
 ## Deploying via the Amplify Console
 
