@@ -324,10 +324,10 @@ async componentDidMount() {
     const talkData = await API.graphql(graphqlOperation(ListTalks))
     console.log('talkData:', talkData)
     this.setState({
-      talks: talkData.data.ListTalks.items
+      talks: talkData.data.listTalks.items
     })
   } catch (err) {
-    console.log('error fetching pets...', err)
+    console.log('error fetching talks...', err)
   }
 }
 
@@ -349,27 +349,25 @@ async componentDidMount() {
 
 ```js
 // import the mutation
-import { createPet as CreatePet } from './graphql/mutations'
+import { createTalk as CreateTalk } from './graphql/mutations'
 
 // create initial state
 state = {
-  name: '', description: '', pets: []
+  name: '', description: '', speakerName: '', speakerBio: '', talks: []
 }
 
-createPet = async() => {
-  const { name, description } = this.state
-  if (name === '') return
-  let pet = { name }
-  if (description !== '') {
-    pet = { ...pet, description }
-  }
-  const updatedPetArray = [...this.state.pets, pet]
-  this.setState({ pets: updatedPetArray })
+createTalk = async() => {
+  const { name, description, speakerBio, speakerName } = this.state
+  if (name === '' || description === '' ||
+  speakerBio === '' || speakerName === '') return
+  let talk = { name, description, speakerBio, speakerName }
+  const newTalkArray = [...this.state.talks, talk]
+  this.setState({ talks: newTalkArray })
   try {
-    await API.graphql(graphqlOperation(CreatePet, { input: pet }))
+    await API.graphql(graphqlOperation(CreateTalk, { input: talk }))
     console.log('item created!')
   } catch (err) {
-    console.log('error creating pet...', err)
+    console.log('error creating talk...', err)
   }
 }
 
@@ -385,13 +383,27 @@ onChange = (event) => {
   name='name'
   onChange={this.onChange}
   value={this.state.name}
+  placeholder='name'
 />
 <input
   name='description'
   onChange={this.onChange}
   value={this.state.description}
+  placeholder='description'
 />
-<button onClick={this.createPet}>Create Pet</button>
+<input
+  name='speakerName'
+  onChange={this.onChange}
+  value={this.state.speakerName}
+  placeholder='speakerName'
+/>
+<input
+  name='speakerBio'
+  onChange={this.onChange}
+  value={this.state.speakerBio}
+  placeholder='speakerBio'
+/>
+<button onClick={this.createTalk}>Create Talk</button>
 ```
 
 ### GraphQL Subscriptions
@@ -657,8 +669,8 @@ Now we can update the GraphQL Schema in `amplify/backend/api/GraphQLPets/schema.
 type Pet @model {
   id: ID!
   name: String!
-  description: String
-  owner: String
+  description: String!
+  owner: String!
 }
 ```
 
