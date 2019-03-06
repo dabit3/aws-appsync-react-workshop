@@ -82,8 +82,7 @@ amplify init
 - Do you want to use an AWS profile? __Y__
 - Please choose the profile you want to use: __amplify-workshop-user__
 
-Now, the AWS Amplify CLI has iniatilized a new project & you will see a new folder: __amplify__. The files in this folder hold your project configuration.
-
+Now, the AWS Amplify CLI has iniatilized a new project & you will see a new folder: __amplify__ & a new file called `aws-export.js` in the __src__ directory. These files hold your project configuration.
 
 ## Adding Authentication
 
