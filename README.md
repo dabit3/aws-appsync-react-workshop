@@ -593,6 +593,12 @@ Finally, we can click __Save and Deploy__ to deploy our application!
 
 Now, we can push updates to Master to update our application.
 
+## Deleting entire project
+
+```sh
+amplify delete
+```
+
 ## Removing Services
 
 If at any time, or at the end of this workshop, you would like to delete a service from your project & your account, you can do this by running the `amplify remove` command:
