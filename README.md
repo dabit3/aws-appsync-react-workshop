@@ -6,10 +6,11 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 
 ### Topics we'll be covering:
 
-- [Authentication](https://github.com/dabit3/aws-amplify-workshop-react#adding-authentication)
 - [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-amplify-workshop-react#adding-a-graphql-api)
-- [Multiple Environments](https://github.com/dabit3/aws-amplify-workshop-react#working-with-multiple-environments)
-- [Removing / Deleting Services](https://github.com/dabit3/aws-amplify-workshop-react#removing-services)
+- [Authentication](https://github.com/dabit3/aws-amplify-workshop-react#adding-authentication)
+- [Adding Authorization to the AWS AppSync API]()
+- [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-amplify-workshop-react#working-with-multiple-environments)
+- [Deleting the resources](https://github.com/dabit3/aws-amplify-workshop-react#removing-services)
 
 ## Redeeming the AWS Credit   
 
@@ -92,23 +93,11 @@ amplify init
 
 Now, the AWS Amplify CLI has iniatilized a new project & you will see a new folder: __amplify__ & a new file called `aws-export.js` in the __src__ directory. These files hold your project configuration.
 
-## Adding Authentication
-
-To add authentication, we can use the following command:
+To view the status of the amplify project at any time, you can run the Amplify `status` command:
 
 ```sh
-amplify add auth
+amplify status
 ```
-
-> When prompted for __Do you want to use default authentication and security configuration?__, choose __Yes__
-
-Now, we'll run the push command and the cloud resources will be created in our AWS account.
-
-```bash
-amplify push
-```
-
-> To view the new Cognito authentication service at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
 
 ### Configuring the React applicaion
 
@@ -126,84 +115,6 @@ Amplify.configure(config)
 
 Now, our app is ready to start using our AWS services.
 
-### Using the withAuthenticator component
-
-To add authentication, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
-
-```js
-import { withAuthenticator } from 'aws-amplify-react'
-```
-
-Next, we'll wrap our default export (the App component) with the `withAuthenticator` HOC:
-
-```js
-export default withAuthenticator(App, { includeGreetings: true })
-```
-
-Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
-
-> To view the new user that was created in Cognito, go back to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
-
-### Accessing User Data
-
-We can access the user's info now that they are signed in by calling `Auth.currentAuthenticatedUser()`.
-
-```js
-import { Auth } from 'aws-amplify'
-
-async componentDidMount() {
-  const user = await Auth.currentAuthenticatedUser()
-  console.log('user info:', user.signInUserSession.idToken.payload)
-  console.log('username:', user.username)
-}
-```
-
-### Custom authentication strategies
-
-The `withAuthenticator` component is a really easy way to get up and running with authentication, but in a real-world application we probably want more control over how our form looks & functions.
-
-Let's look at how we might create our own authentication flow.
-
-To get started, we would probably want to create input fields that would hold user input data in the state. For instance when signing up a new user, we would probably need 4 user inputs to capture the user's username, email, password, & phone number.
-
-To do this, we could create some initial state for these values & create an event handler that we could attach to the form inputs:
-
-```js
-// initial state
-state = {
-  username: '', password: '', email: '', phone_number: ''
-}
-
-// event handler
-onChange = (event) => {
-  this.setState({ [event.target.name]: event.target.value })
-}
-
-// example of usage with input
-<input
-  name='username'
-  placeholder='username'
-  onChange={this.onChange}
-/>
-```
-
-We'd also need to have a method that signed up & signed in users. We can us the Auth class to do thi. The Auth class has over 30 methods including things like `signUp`, `signIn`, `confirmSignUp`, `confirmSignIn`, & `forgotPassword`. Thes functions return a promise so they need to be handled asynchronously.
-
-```js
-// import the Auth component
-import { Auth } from 'aws-amplify'
-
-// Class method to sign up a user
-signUp = async() => {
-  const { username, password, email, phone_number } = this.state
-  try {
-    await Auth.signUp({ username, password, attributes: { email, phone_number }})
-  } catch (err) {
-    console.log('error signing up user...', err)
-  }
-}
-```
-
 ## Adding a GraphQL API
 
 To add a GraphQL API, we can use the following command:
@@ -215,7 +126,7 @@ amplify add api
 Answer the following questions
 
 - Please select from one of the above mentioned services __GraphQL__   
-- Provide API name: __graphqlmeetup__   
+- Provide API name: __ConferenceAPI__   
 - Choose an authorization type for the API __API key__   
 - Do you have an annotated GraphQL schema? __N__   
 - Do you want a guided schema creation? __Y__   
@@ -444,7 +355,125 @@ API.graphql(
 });
 ```
 
-### Adding Authorization to the GraphQL API (Advanced, optional)
+## Challenge
+Recreate this functionality in Hooks
+
+> For direction, check out the tutorial [here](https://medium.com/open-graphql/react-hooks-for-graphql-3fa8ebdd6c62)
+> For the solution to this challenge, view the hooks file.
+
+## Adding Authentication
+
+To add authentication, we can use the following command:
+
+```sh
+amplify add auth
+```
+
+> When prompted for __Do you want to use default authentication and security configuration?__, choose __Yes__
+
+Now, we'll run the push command and the cloud resources will be created in our AWS account.
+
+```bash
+amplify push
+```
+
+> To view the new Cognito authentication service at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
+
+
+### Using the withAuthenticator component
+
+To add authentication, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
+
+```js
+import { withAuthenticator } from 'aws-amplify-react'
+```
+
+Next, we'll wrap our default export (the App component) with the `withAuthenticator` HOC:
+
+```js
+export default withAuthenticator(App, { includeGreetings: true })
+```
+
+Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
+
+> To view the new user that was created in Cognito, go back to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
+
+### Accessing User Data
+
+We can access the user's info now that they are signed in by calling `Auth.currentAuthenticatedUser()`.
+
+```js
+import { Auth } from 'aws-amplify'
+
+async componentDidMount() {
+  const user = await Auth.currentAuthenticatedUser()
+  console.log('user info:', user.signInUserSession.idToken.payload)
+  console.log('username:', user.username)
+}
+```
+
+### Custom authentication strategies
+
+The `withAuthenticator` component is a really easy way to get up and running with authentication, but in a real-world application we probably want more control over how our form looks & functions.
+
+Let's look at how we might create our own authentication flow.
+
+To get started, we would probably want to create input fields that would hold user input data in the state. For instance when signing up a new user, we would probably need 4 user inputs to capture the user's username, email, password, & phone number.
+
+To do this, we could create some initial state for these values & create an event handler that we could attach to the form inputs:
+
+```js
+// initial state
+state = {
+  username: '', password: '', email: '', phone_number: ''
+}
+
+// event handler
+onChange = (event) => {
+  this.setState({ [event.target.name]: event.target.value })
+}
+
+// example of usage with input
+<input
+  name='username'
+  placeholder='username'
+  onChange={this.onChange}
+/>
+```
+
+We'd also need to have a method that signed up & signed in users. We can us the Auth class to do thi. The Auth class has over 30 methods including things like `signUp`, `signIn`, `confirmSignUp`, `confirmSignIn`, & `forgotPassword`. Thes functions return a promise so they need to be handled asynchronously.
+
+```js
+// import the Auth component
+import { Auth } from 'aws-amplify'
+
+// Class method to sign up a user
+signUp = async() => {
+  const { username, password, email, phone_number } = this.state
+  try {
+    await Auth.signUp({ username, password, attributes: { email, phone_number }})
+  } catch (err) {
+    console.log('error signing up user...', err)
+  }
+}
+```
+
+## Adding Authorization to the GraphQL API
+
+Next we need to change the AppSync API to now use the newly created Cognito Authentication service as the authentication type.
+
+To do so, we'll reconfigure the API:
+
+```sh
+amplify configure api
+
+> Please select from one of the below mentioned services: GraphQL
+> Choose an authorization type for the API: Amazon Cognito User Pool
+
+amplify push
+```
+
+### Fine Grained access control
 
 To add authorization to the API, we can re-configure the API to use our cognito identity pool. To do so, we can run `amplify configure api`:
 
@@ -462,30 +491,59 @@ amplify push
 
 Now, we can only access the API with a logged in user.
 
-_Let's how how we can access the user's identity in the resolver._
+Next, let's look at how to use the identity of the user to associate items created in the database with the logged in user & then query the database using these credentials.
 
-To do so, open the AWS AppSync dashboard for the API, click __Schema__, & open the resolver for the `createTalk` mutation.
+To do so, we'll store the user's identity in the database table as userId & add a new index on the table to query for this user ID.
 
-Here in the __Request mapping template__, update the resolver to add the following:
+#### Adding an index to the table
 
-```js
-$util.qr($context.args.input.put("userId", $context.identity.sub))
-$util.qr($context.args.input.put("username", $context.identity.username))
+Next, we'll want to add a new GSI (global secondary index) in the table. We do this so we can query on the index to add a new access pattern.
+
+To do this, open the [AppSync Console](https://console.aws.amazon.com/appsync/home), choose your API & click on __Data Sources__. Next, click on the data source link.
+
+From here, click on the __Indexes__ tab & click __Create index__.
+
+For the __partition key__, input `userId` to create a `userId-index` Index name & click __Create index__.
+
+Next, we'll update the resolver for adding talks & querying for talks.
+
+#### Updating the resolvers
+
+In the folder __amplify/backend/api/ConferenceAPI/resolvers__, create the following two resolvers:
+
+__Mutation.createTalk.req.vtl__ & __Query.listTalks.req.vtl__.
+
+__Mutation.createTalk.req.vtl__
+
+```vtl
+$util.qr($context.args.input.put("createdAt", $util.time.nowISO8601()))
+$util.qr($context.args.input.put("updatedAt", $util.time.nowISO8601()))
+$util.qr($context.args.input.put("__typename", "Restaurant"))
+$util.qr($context.args.input.put("userId", $ctx.identity.sub))
+
+{
+  "version": "2017-02-28",
+  "operation": "PutItem",
+  "key": {
+      "id":     $util.dynamodb.toDynamoDBJson($util.defaultIfNullOrBlank($ctx.args.input.id, $util.autoId()))
+  },
+  "attributeValues": $util.dynamodb.toMapValuesJson($context.args.input),
+  "condition": {
+      "expression": "attribute_not_exists(#id)",
+      "expressionNames": {
+          "#id": "id"
+    }
+  }
+}
 ```
 
-Now when we create items, the user's identity is stored with each request.
+__Query.listTalks.req.vtl__
 
-Next, we need to add an index on the table holding the talk data. Open the Data Sources tab & click on the DynamoDB table link. From the DynamoDB table view, click on __indexes__ & __Create Index__.
-
-Here, create a new index. The partition key should be __userId__ & the index name needs to be __userId-index__.
-
-We can now query on the userId index, only fetching data for the logged-in user:
-
-```js
+```vtl
 {
     "version" : "2017-02-28",
     "operation" : "Query",
-    "index": "userId-index",
+    "index" : "userId-index",
     "query" : {
         "expression": "userId = :userId",
         "expressionValues" : {
@@ -495,73 +553,280 @@ We can now query on the userId index, only fetching data for the logged-in user:
 }
 ```
 
-## Working with multiple environments
-
-You can create multiple environments for your application in which to create & test out new features without affecting the main environment which you are working on.
-
-When you create a new environment from an existing environment, you are given a copy of the entire backend application stack from the original project. When you make changes in the new environment, you are then able to test these new changes in the new environment & merge only the changes that have been made since the new environment was created back into the original environment.
-
-Let's take a look at how to create a new environment. In this new environment, we'll re-configure the GraphQL Schema to not require the speaker's bio.
-
-First, we'll initialize a new environment using `amplify env add`:
+Next, run the push command again to update the API:
 
 ```sh
-amplify env add
-```
-- Do you want to use an existing environment? __N__
-- Enter a name for the environment: __apiupdate__
-- Do you want to use an AWS profile? __Y__
-- __amplify-workshop-user__
-
-Once the new environment is initialized, we should be able to see some information about our environment setup by running:
-
-```sh
-amplify env list
-
-| Environments |
-| ------------ |
-| dev          |
-| *apiupdate   |
+amplify push
 ```
 
-Now we can update the GraphQL Schema in `amplify/backend/api/graphqlmeetup/schema.graphql` to the following (updating the speakerBio field to be optional):
+Now when we create new talks the `userId` field will be populated with the `userId` of the logged-in user.
+
+When we query for the talks, we will only receive the restaurant data for the items that we created.
+
+#### Creating custom resolvers
+
+Now let's say we want to define & use a custom GraphQL operation & resolver that does not yet exist? We can also do that using Amplify & the local environment.
+
+To do so, we need to do three things:
+
+1. Define the operations we'd like to have available in our schema (add queries, mutations, subscriptions to __schema.graphql__).
+
+To do so, update __amplify/backend/api/ConferenceAPI/schema.graphql__ to the following:
 
 ```graphql
 type Talk @model {
   id: ID!
+  clientId: ID
   name: String!
   description: String!
   speakerName: String!
-  speakerBio: String
+  speakerBio: String!
+}
+
+type ModelTalkConnection {
+	items: [Talk]
+	nextToken: String
+}
+
+type Query {
+  listAllTalks(limit: Int, nextToken: String): ModelTalkConnection
 }
 ```
 
-Now, we can create this new stack by running `amplify push`:
+2. Create the request & response mapping templates in __amplify/backend/api/ConferenceAPI/resolvers__.
+
+__Query.listAllTalks.req.vtl__
+
+```vtl
+{
+    "version" : "2017-02-28",
+    "operation" : "Scan",
+    "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
+    "nextToken": $util.toJson($util.defaultIfNullOrBlank($ctx.args.nextToken, null))
+}
+```
+
+__Query.listAllTalks.res.vtl__
+
+```vtl
+{
+    "items": $util.toJson($ctx.result.items),
+    "nextToken": $util.toJson($util.defaultIfNullOrBlank($context.result.nextToken, null))
+}
+```
+
+3. Update __amplify/backend/api/ConferenceAPI/stacks/CustomResources.json__ with the definition of the custom resource.
+
+Update the `Resources` field in __CustomResources.json__ to the following:
+
+```json
+{
+  ...rest of template,
+  "Resources": {
+    "QueryListAllTalksResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "AppSyncApiId"
+        },
+        "DataSourceName": "TalkTable",
+        "TypeName": "Query",
+        "FieldName": "listAllTalks",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.listAllTalks.req.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.listAllTalks.res.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  ...rest of template,
+}
+```
+
+Now that everything has been updated, run the push command again:
 
 ```sh
 amplify push
 ```
 
-After we test it out, we can now merge it into our original dev environment:
+## Multiple Serverless Environments
+
+Now that we have our API up & running, what if we wanted to update our API but wanted to test it out without it affecting our existing version?
+
+To do so, we can create a clone of our existing environment, test it out, & then deploy & test the new resources.
+
+Once we are happy with the new feature, we can then merge it back into our main environment. Let's see how to do this!
+
+### Creating a new environment
+
+To create a new environment, we can run the `env` command:
 
 ```sh
-amplify env checkout dev
+amplify env add
 
+> Do you want to use an existing environment? No
+> Enter a name for the environment: apiupdate
+> Do you want to use an AWS profile? Yes
+> Please choose the profile you want to use: appsync-workshop-profile
+```
+
+Now, the new environment has been initialize, & we can deploy the new environment using the `push` command:
+
+```sh
+amplify push
+```
+
+Now that the new environment has been created we can get a list of all available environments using the CLI:
+
+```sh
+amplify env list
+```
+
+Let's update the GraphQL schema to add a new field. In __amplify/backend/api/ConferenceAPI/schema.graphql__  update the schema to the following:
+
+```graphql
+type Talk @model {
+  id: ID!
+  clientId: ID
+  name: String!
+  description: String!
+  speakerName: String!
+  speakerBio: String!
+  type: String
+}
+
+type ModelTalkConnection {
+	items: [Talk]
+	nextToken: String
+}
+
+type Query {
+  listAllTalks(limit: Int, nextToken: String): ModelTalkConnection
+}
+```
+
+In the schema we added a new field to the __Talk__ definition to define the type of talk:
+
+```graphql
+type: String
+```
+
+Now, we can run amplify push again to update the API:
+
+```sh
+amplify push
+```
+
+To test this out, we can go into the [AppSync Console](https://console.aws.amazon.com/appsync) & log into the API.
+
+You should now see a new API called __ConferenceAPI-apiupdate__. Click on this API to view the API dashboard.
+
+If you click on __Schema__ you should notice that it has been created with the new __type__ field. Let's try it out.
+
+To test it out we need to create a new user because we are using a brand new authentication service. To do this, open the app & sign up.
+
+In the API dashboard, click on __Queries__.
+
+Next, click on the __Login with User Pools__ link.
+
+Copy the __aws_user_pools_web_client_id__ value from your __aws-exports__ file & paste it into the __ClientId__ field.
+
+Next, login using your __username__ & __password__.
+
+Now, create a new mutation & then query for it:
+
+```graphql
+mutation createTalk {
+  createRestaurant(input: {
+    name: "NodeJS Is Awesome"
+    description: "Deep dive into NodeJS"
+    speakerName: "substack"
+    speakerBio: "JavaScript hero"
+    type: "nodejs"
+  }) {
+    id name description speakerName speakerBio
+  }
+}
+
+query listAllTalks {
+  listAllTalks {
+    items {
+      name
+      description
+      speakerName
+      speakerBio
+      type
+    }
+  }
+}
+```
+### Merging the new environment changes into the main environment.
+
+Now that we've created a new environment & tested it out, let's check out the main environment.
+
+```sh
+amplify env checkout local
+```
+
+Next, run the `status` command:
+
+```sh
 amplify status
+```
 
+You should now see an __Update__ operation:
+
+```
+Current Environment: local
+
+| Category | Resource name   | Operation | Provider plugin   |
+| -------- | --------------- | --------- | ----------------- |
+| Api      | ConferenceAPI   | Update    | awscloudformation |
+| Auth     | cognito75a8ccb4 | No Change | awscloudformation |
+```
+
+To deploy the changes, run the push command:
+
+```sh
 amplify push
 ```
 
-- Do you want to update code for your updated GraphQL API? __Y__
-- Do you want to generate GraphQL statements? __Y__
-
-### Removing an environment
-
-To remove an environment, run the `amplify env remove <envname>` command:
+Now, the changes have been deployed & we can delete the `apiupdate` environment:
 
 ```sh
 amplify env remove apiupdate
+
+Do you also want to remove all the resources of the environment from the cloud? Y
 ```
+
+Now, we should be able to run the `list` command & see only our main environment:
+
+```sh
+amplify env list
+```
+
 
 ## Deploying via the Amplify Console
 
