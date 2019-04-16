@@ -228,7 +228,7 @@ To do so, we need to define the query, execute the query, store the data in our 
 // imports from Amplify library
 import { API, graphqlOperation } from 'aws-amplify'
 
-// import query
+// import query definition
 import { listTalks as ListTalks } from './graphql/queries'
 
 // define some state to hold the data returned from the API
@@ -285,9 +285,13 @@ createTalk = async() => {
   const { name, description, speakerBio, speakerName } = this.state
   if (name === '' || description === '' ||
   speakerBio === '' || speakerName === '') return
-  let talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
-  const newTalkArray = [...this.state.talks, talk]
-  this.setState({ talks: newTalkArray })
+
+  const talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
+  const talks = [...this.state.talks, talk]
+  this.setState({
+    talks, name: '', description: '', speakerName: '', speakerBio: ''
+  })
+
   try {
     await API.graphql(graphqlOperation(CreateTalk, { input: talk }))
     console.log('item created!')
