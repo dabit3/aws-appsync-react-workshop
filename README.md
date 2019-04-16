@@ -80,7 +80,7 @@ amplify init
 ```
 
 - Enter a name for the project: __amplifyreactapp__
-- Enter a name for the environment: __dev__
+- Enter a name for the environment: __master__
 - Choose your default editor: __Visual Studio Code (or your default editor)__   
 - Please choose the type of app that you're building __javascript__   
 - What javascript framework are you using __react__   
@@ -156,7 +156,7 @@ amplify push
 - Choose the code generation language target: __javascript__
 - Enter the file name pattern of graphql queries, mutations and subscriptions: __(src/graphql/**/*.js)__
 - Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? __Y__
-? Enter maximum statement depth [increase from default if your schema is deeply nested] __2__
+- Enter maximum statement depth [increase from default if your schema is deeply nested] __2__
 
 > To view the new AWS AppSync API at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/appsync](https://console.aws.amazon.com/appsync). Also be sure that your region is set correctly.
 
