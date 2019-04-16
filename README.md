@@ -41,9 +41,9 @@ Now change into the new app directory & install the AWS Amplify & AWS Amplify Re
 
 ```bash
 cd my-amplify-app
-npm install --save aws-amplify aws-amplify-react
+npm install --save aws-amplify aws-amplify-react uuid
 # or
-yarn add aws-amplify aws-amplify-react
+yarn add aws-amplify aws-amplify-react uuid
 ```
 
 ## Installing the CLI & Initializing a new AWS Amplify Project
@@ -138,6 +138,7 @@ Answer the following questions
 ```graphql
 type Talk @model {
   id: ID!
+  clientId: ID
   name: String!
   description: String!
   speakerName: String!
@@ -267,8 +268,13 @@ async componentDidMount() {
  Now, let's look at how we can create mutations.
 
 ```js
+// import uuid to create a unique client ID
+import uuid from 'uuid/v4'
+
 // import the mutation
 import { createTalk as CreateTalk } from './graphql/mutations'
+
+const CLIENT_ID = uuid()
 
 // update initial state
 state = {
@@ -279,7 +285,7 @@ createTalk = async() => {
   const { name, description, speakerBio, speakerName } = this.state
   if (name === '' || description === '' ||
   speakerBio === '' || speakerName === '') return
-  let talk = { name, description, speakerBio, speakerName }
+  let talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
   const newTalkArray = [...this.state.talks, talk]
   this.setState({ talks: newTalkArray })
   try {
@@ -342,14 +348,8 @@ API.graphql(
     next: (eventData) => {
       console.log('eventData', eventData)
       const talk = eventData.value.data.onCreateTalk
-      const talks = [
-        ...this.state.talks.filter(t => {
-          const val1 = t.name + t.description
-          const val2 = talk.name + talk.description
-          return val1 !== val2
-        }),
-        talk
-      ]
+      if (talk.clientId === CLIENTID) return
+      const talks = [ ...this.state.talks, talk ]
       this.setState({ talks })
     }
 });
