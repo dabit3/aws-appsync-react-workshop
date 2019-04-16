@@ -518,7 +518,7 @@ __Mutation.createTalk.req.vtl__
 ```vtl
 $util.qr($context.args.input.put("createdAt", $util.time.nowISO8601()))
 $util.qr($context.args.input.put("updatedAt", $util.time.nowISO8601()))
-$util.qr($context.args.input.put("__typename", "Restaurant"))
+$util.qr($context.args.input.put("__typename", "Talk"))
 $util.qr($context.args.input.put("userId", $ctx.identity.sub))
 
 {
@@ -561,7 +561,7 @@ amplify push
 
 Now when we create new talks the `userId` field will be populated with the `userId` of the logged-in user.
 
-When we query for the talks, we will only receive the restaurant data for the items that we created.
+When we query for the talks, we will only receive the talk data for the items that we created.
 
 #### Creating custom resolvers
 
@@ -759,7 +759,7 @@ Now, create a new mutation & then query for it:
 
 ```graphql
 mutation createTalk {
-  createRestaurant(input: {
+  createTalk(input: {
     name: "NodeJS Is Awesome"
     description: "Deep dive into NodeJS"
     speakerName: "substack"
