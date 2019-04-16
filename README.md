@@ -160,7 +160,7 @@ amplify push
 
 > To view the new AWS AppSync API at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/appsync](https://console.aws.amazon.com/appsync). Also be sure that your region is set correctly.
 
-### Adding mutations from within the AWS AppSync Console
+### Performing mutations from within the AWS AppSync Console
 
 In the AWS AppSync console, open your API & then click on Queries.
 
