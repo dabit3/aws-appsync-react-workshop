@@ -37,7 +37,7 @@ Or use npx (npm 5.2 & later) to create a new app:
 npx create-react-app my-amplify-app
 ```
 
-Now change into the new app directory & install the AWS Amplify & AWS Amplify React libraries:
+Now change into the new app directory & install the AWS Amplify, AWS Amplify React, & uuid libraries:
 
 ```bash
 cd my-amplify-app
