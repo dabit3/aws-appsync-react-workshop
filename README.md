@@ -567,6 +567,20 @@ Now when we create new talks the `userId` field will be populated with the `user
 
 When we query for the talks, we will only receive the talk data for the items that we created ourselves.
 
+```graphql
+query listTalks {
+  listTalks {
+    items {
+      id
+      name
+      description
+      speakerName
+      speakerBio
+    }
+  }
+}
+```
+
 #### Creating custom resolvers
 
 Now let's say we want to define & use a custom GraphQL operation & resolver that does not yet exist? We can also do that using Amplify & the local environment.
