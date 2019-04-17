@@ -65,12 +65,12 @@ amplify configure
 > If you'd like to see a video walkthrough of this configuration process, click [here](https://www.youtube.com/watch?v=fWbM5DLh25U).
 
 Here we'll walk through the `amplify configure` setup. Once you've signed in to the AWS console, continue:
-- Specify the AWS Region: __eu-central-1__
+- Specify the AWS Region: __us-east-1__
 - Specify the username of the new IAM user: __amplify-workshop-user__
 > In the AWS Console, click __Next: Permissions__, __Next: Tags__, __Next: Review__, & __Create User__ to create the new IAM user. Then, return to the command line & press Enter.
 - Enter the access key of the newly created user:   
-  accessKeyId: __(<YOUR_ACCESS_KEY_ID>)__   
-  secretAccessKey:  __(<YOUR_SECRET_ACCESS_KEY>)__
+? accessKeyId: __(<YOUR_ACCESS_KEY_ID>)__   
+? secretAccessKey:  __(<YOUR_SECRET_ACCESS_KEY>)__
 - Profile Name: __amplify-workshop-user__
 
 ### Initializing A New Project
@@ -864,7 +864,7 @@ git commit -m 'initial commit'
 git push origin master
 ```
 
-Next we'll visit the Amplify Console in our AWS account at [https://eu-west-1.console.aws.amazon.com/amplify/home](https://eu-west-1.console.aws.amazon.com/amplify/home).
+Next we'll visit the Amplify Console in our AWS account at [https://us-east-1.console.aws.amazon.com/amplify/home](https://us-east-1.console.aws.amazon.com/amplify/home).
 
 Here, we'll click __Get Started__ to create a new deployment. Next, authorize Github as the repository service.
 
