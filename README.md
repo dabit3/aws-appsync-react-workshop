@@ -478,7 +478,7 @@ signUp = async() => {
 
 ## Adding Authorization to the GraphQL API
 
-Next we need to change the AppSync API to now use the newly created Cognito Authentication service as the authentication type.
+Next we need to update the AppSync API to now use the newly created Cognito Authentication service as the authentication type.
 
 To do so, we'll reconfigure the API:
 
