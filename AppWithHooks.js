@@ -4,9 +4,9 @@ import React, {
 
 import uuid from 'uuid/v4'
 import { API, graphqlOperation } from 'aws-amplify'
-import { listTalks} from './src/graphql/queries'
-import { createTalk } from './src/graphql/mutations'
-import { onCreateTalk } from './src/graphql/subscriptions'
+import { listTalks} from './graphql/queries'
+import { createTalk } from './graphql/mutations'
+import { onCreateTalk } from './graphql/subscriptions'
 
 const CLIENTID = uuid()
 
@@ -110,10 +110,11 @@ function App() {
   console.log('state: ', state)
   return (
     <div style={styles.container}>
-      <input
+        <input
+          placeholder="name"
+          style={{ height: 50, margin: 5, backgroundColor: "#ddd" }}
           onChange={e => updater(e.target.value, 'name', dispatch)}
           value={state.name}
-          style={{ height: 50, margin: 5, backgroundColor: "#ddd" }}
         />
         <input
           placeholder="description"
@@ -122,9 +123,16 @@ function App() {
           value={state.description}
         />
         <input
+          placeholder="speaker name"
           style={{ height: 50, margin: 5, backgroundColor: "#ddd" }}
-          onChange={e => updater(e.target.value, 'city', dispatch)}
-          value={state.city}
+          onChange={e => updater(e.target.value, 'speakerName', dispatch)}
+          value={state.speakerName}
+        />
+        <input
+          placeholder="speaker bio"
+          onChange={e => updater(e.target.value, 'speakerBio', dispatch)}
+          value={state.speakerBio}
+          style={{ height: 50, margin: 5, backgroundColor: "#ddd" }}
         />
         <button onClick={() => CreateTalk(state, dispatch)}>
           Create Talk
@@ -142,7 +150,7 @@ function App() {
     </div>
   )
 }
-const styles = StyleSheet.create({
+const styles = {
   talk: {
     padding: 15,
     borderBottomWidth: 2 
@@ -163,6 +171,6 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+}
 
 export default App
