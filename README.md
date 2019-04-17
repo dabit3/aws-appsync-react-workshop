@@ -146,7 +146,7 @@ type Talk @model {
 }
 ```
 
-> Next, let's push the configuration to our account:
+> Next, let's deploy the API into our account:
 
 ```bash
 amplify push
