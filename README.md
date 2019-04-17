@@ -359,7 +359,7 @@ componentDidMount() {
       next: (eventData) => {
         console.log('eventData', eventData)
         const talk = eventData.value.data.onCreateTalk
-        if (talk.clientId === CLIENTID) return
+        if (talk.clientId === CLIENT_ID) return
         const talks = [ ...this.state.talks, talk ]
         this.setState({ talks })
       }
