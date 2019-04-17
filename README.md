@@ -348,18 +348,27 @@ To do so, we need to define the subscription, listen for the subscription, & upd
 // import the subscription
 import { onCreateTalk as OnCreateTalk } from './graphql/subscriptions'
 
+// define the subscription in the class
+subscription = {}
+
 // subscribe in componentDidMount
-API.graphql(
-  graphqlOperation(OnCreateTalk)
-).subscribe({
-    next: (eventData) => {
-      console.log('eventData', eventData)
-      const talk = eventData.value.data.onCreateTalk
-      if (talk.clientId === CLIENTID) return
-      const talks = [ ...this.state.talks, talk ]
-      this.setState({ talks })
-    }
-});
+componentDidMount() {
+  this.subscription = API.graphql(
+    graphqlOperation(OnCreateTalk)
+  ).subscribe({
+      next: (eventData) => {
+        console.log('eventData', eventData)
+        const talk = eventData.value.data.onCreateTalk
+        if (talk.clientId === CLIENTID) return
+        const talks = [ ...this.state.talks, talk ]
+        this.setState({ talks })
+      }
+  })
+}
+
+componentWillUnmount() {
+  this.subscription.unsubscribe()
+}
 ```
 
 ## Challenge
