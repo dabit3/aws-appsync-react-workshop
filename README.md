@@ -471,7 +471,7 @@ To do so, we'll reconfigure the API:
 ```sh
 amplify configure api
 
-> Please select from one of the below mentioned services: GraphQL
+> Please select from one of the below mentioned services: GraphQL   
 > Choose an authorization type for the API: Amazon Cognito User Pool
 
 amplify push
