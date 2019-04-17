@@ -484,7 +484,7 @@ To add authorization to the API, we can re-configure the API to use our cognito 
 ```sh
 amplify configure api
 ```
-Please select from one of the below mentioned services: __GraphQL__
+Please select from one of the below mentioned services: __GraphQL__   
 Choose an authorization type for the API: __Amazon Cognito User Pool__
 
 Next, we'll run `amplify push`:
