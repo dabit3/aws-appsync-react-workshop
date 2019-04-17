@@ -501,9 +501,9 @@ To do so, we'll store the user's identity in the database table as userId & add 
 
 #### Adding an index to the table
 
-Next, we'll want to add a new GSI (global secondary index) in the table. We do this so we can query on the index to add a new access pattern.
+Next, we'll want to add a new GSI (global secondary index) in the table. We do this so we can query on the index to gain new data access pattern.
 
-To do this, open the [AppSync Console](https://console.aws.amazon.com/appsync/home), choose your API & click on __Data Sources__. Next, click on the data source link.
+To add the index, open the [AppSync Console](https://console.aws.amazon.com/appsync/home), choose your API & click on __Data Sources__. Next, click on the data source link.
 
 From here, click on the __Indexes__ tab & click __Create index__.
 
@@ -565,7 +565,7 @@ amplify push
 
 Now when we create new talks the `userId` field will be populated with the `userId` of the logged-in user.
 
-When we query for the talks, we will only receive the talk data for the items that we created.
+When we query for the talks, we will only receive the talk data for the items that we created ourselves.
 
 #### Creating custom resolvers
 
