@@ -223,8 +223,11 @@ The first thing we'll do is perform a query to fetch data from our API.
 
 To do so, we need to define the query, execute the query, store the data in our state, then list the items in our UI.
 
+#### App.js
 
 ```js
+// App.js
+
 // imports from Amplify library
 import { API, graphqlOperation } from 'aws-amplify'
 
