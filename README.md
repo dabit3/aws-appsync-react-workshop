@@ -583,7 +583,7 @@ query listTalks {
 
 #### Creating custom resolvers
 
-Now let's say we want to define & use a custom GraphQL operation & resolver that does not yet exist? We can also do that using Amplify & the local environment.
+Now let's say we want to define & use a custom GraphQL operation & create corresponding resolvers that do not yet exist? We can also do that using Amplify & the local environment.
 
 To do so, we need to do three things:
 
@@ -602,8 +602,8 @@ type Talk @model {
 }
 
 type ModelTalkConnection {
-	items: [Talk]
-	nextToken: String
+  items: [Talk]
+  nextToken: String
 }
 
 type Query {
