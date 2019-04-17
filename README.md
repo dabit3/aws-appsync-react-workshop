@@ -736,8 +736,8 @@ type Talk @model {
 }
 
 type ModelTalkConnection {
-	items: [Talk]
-	nextToken: String
+  items: [Talk]
+  nextToken: String
 }
 
 type Query {
