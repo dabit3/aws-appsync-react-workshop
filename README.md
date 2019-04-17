@@ -362,7 +362,7 @@ API.graphql(
 ## Challenge
 Recreate this functionality in Hooks
 
-> For direction, check out the tutorial [here](https://medium.com/open-graphql/react-hooks-for-graphql-3fa8ebdd6c62)
+> For direction, check out the tutorial [here](https://medium.com/open-graphql/react-hooks-for-graphql-3fa8ebdd6c62)   
 > For the solution to this challenge, view the hooks file.
 
 ## Adding Authentication
