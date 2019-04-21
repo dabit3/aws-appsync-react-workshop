@@ -601,6 +601,8 @@ query listTalks {
 
 Now let's say we want to define & use a custom GraphQL operation & create corresponding resolvers that do not yet exist? We can also do that using Amplify & the local environment.
 
+Let's create a query & resolvers that will query for __all__ talks in the API, similar to the functionality we had before changing the `listTalks` resolver.
+
 To do so, we need to do three things:
 
 1. Define the operations we'd like to have available in our schema (add queries, mutations, subscriptions to __schema.graphql__).
