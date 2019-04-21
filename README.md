@@ -6,11 +6,11 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 
 ### Topics we'll be covering:
 
-- [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-amplify-workshop-react#adding-a-graphql-api)
-- [Authentication](https://github.com/dabit3/aws-amplify-workshop-react#adding-authentication)
-- [Adding Authorization to the AWS AppSync API]()
-- [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-amplify-workshop-react#working-with-multiple-environments)
-- [Deleting the resources](https://github.com/dabit3/aws-amplify-workshop-react#removing-services)
+- [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-appsync-react-workshop#getting-started---creating-the-react-application)
+- [Authentication](https://github.com/dabit3/aws-appsync-react-workshop#adding-authentication)
+- [Adding Authorization to the AWS AppSync API](https://github.com/dabit3/aws-appsync-react-workshop#adding-authorization-to-the-graphql-api)
+- [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-appsync-react-workshop#multiple-serverless-environments)
+- [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
 ## Redeeming the AWS Credit   
 
