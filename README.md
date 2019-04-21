@@ -577,6 +577,8 @@ Next, run the push command again to update the API:
 amplify push
 ```
 
+> Now that we've added authorization to the API, we will have to log in if we would like to perform queries in the AppSync Console. To log in, find the `aws_user_pools_web_client_id` from `aws-exports.js` & log in using your `username` & `password`.
+
 Now when we create new talks the `userId` field will be populated with the `userId` of the logged-in user.
 
 When we query for the talks, we will only receive the talk data for the items that we created ourselves.
