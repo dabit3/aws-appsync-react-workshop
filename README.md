@@ -375,7 +375,7 @@ componentWillUnmount() {
 Recreate this functionality in Hooks
 
 > For direction, check out the tutorial [here](https://medium.com/open-graphql/react-hooks-for-graphql-3fa8ebdd6c62)   
-> For the solution to this challenge, view the hooks file.
+> For the solution to this challenge, view the [hooks file](https://github.com/dabit3/aws-appsync-react-workshop/blob/master/AppWithHooks.js).
 
 ## Adding Authentication
 
