@@ -1,4 +1,4 @@
-# Building real-time offline-ready Applications with React, GraphQL & AWS AppSync
+# Building real-time applications with React, GraphQL & AWS AppSync
 
 In this workshop we'll learn how to build cloud-enabled web applications with React & [AWS Amplify](https://aws-amplify.github.io/).
 
