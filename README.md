@@ -526,7 +526,7 @@ We'd also need to have a method that signed up & signed in users. We can us the 
 import { Auth } from 'aws-amplify'
 
 // Class method to sign up a user
-signUp = async() => {
+async function signUp() => {
   const { username, password, email, phone_number } = state
   try {
     await Auth.signUp({ username, password, attributes: { email, phone_number }})
