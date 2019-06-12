@@ -605,7 +605,7 @@ type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
 
 If you'd like to read more about the `@auth` directive, check out the documentation [here](https://aws-amplify.github.io/docs/cli/graphql#auth).
 
-## Lambda Resolvers
+## Lambda GraphQL Resolvers
 
 Next, let's have a look at how to deploy a serverless function and use it as a GraphQL resolver.
 
