@@ -276,6 +276,10 @@ export default withAuthenticator(App, { includeGreetings: true })
 
  Now, let's look at how we can create mutations.
 
+ To do so, we'll refactor our state in to a reducer by using the [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer) hook. We do this because our state is beginning to grow and we can minimize our code by using `useReducer`.
+
+ We'll also be using the `API` class from amplify again, but now will be passing a second argument to `graphqlOperation` in order to pass in variables: `API.graphql(graphqlOperation(CreateTalk, { input: talk }))`.
+
 ```js
 import React, { useEffect, useReducer } from 'react'
 
