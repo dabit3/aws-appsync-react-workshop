@@ -9,6 +9,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-appsync-react-workshop#getting-started---creating-the-react-application)
 - [Authentication](https://github.com/dabit3/aws-appsync-react-workshop#adding-authentication)
 - [Adding Authorization to the AWS AppSync API](https://github.com/dabit3/aws-appsync-react-workshop#adding-authorization-to-the-graphql-api)
+- [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-resolvers)
 - [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-appsync-react-workshop#multiple-serverless-environments)
 - [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
@@ -121,17 +122,14 @@ To add a GraphQL API, we can use the following command:
 
 ```sh
 amplify add api
+? Please select from one of the above mentioned services GraphQL
+? Provide API name: ConferenceAPI
+? Choose an authorization type for the API: API key
+? Do you have an annotated GraphQL schema? N 
+? Do you want a guided schema creation? Y
+? What best describes your project: Single object with fields
+? Do you want to edit the schema now? (Y/n) Y
 ```
-
-Answer the following questions
-
-- Please select from one of the above mentioned services __GraphQL__   
-- Provide API name: __ConferenceAPI__   
-- Choose an authorization type for the API __API key__   
-- Do you have an annotated GraphQL schema? __N__   
-- Do you want a guided schema creation? __Y__   
-- What best describes your project: __Single object with fields (e.g. “Todo” with ID, name, description)__   
-- Do you want to edit the schema now? (Y/n) __Y__   
 
 > When prompted, update the schema to the following:   
 
@@ -150,13 +148,13 @@ type Talk @model {
 
 ```bash
 amplify push
-```
 
-- Do you want to generate code for your newly created GraphQL API __Y__
-- Choose the code generation language target: __javascript__
-- Enter the file name pattern of graphql queries, mutations and subscriptions: __(src/graphql/**/*.js)__
-- Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? __Y__
-- Enter maximum statement depth [increase from default if your schema is deeply nested] __2__
+? Do you want to generate code for your newly created GraphQL API? Y
+? Choose the code generation language target: javascript
+? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
+? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? Y
+? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
+```
 
 > To view the new AWS AppSync API at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/appsync](https://console.aws.amazon.com/appsync). Also be sure that your region is set correctly.
 
@@ -227,41 +225,48 @@ To do so, we need to define the query, execute the query, store the data in our 
 
 ```js
 // src/App.js
-
-// imports from Amplify library
-import { API, graphqlOperation } from 'aws-amplify'
+import React, { useEffect, useState } from 'react'
 
 // import query definition
 import { listTalks as ListTalks } from './graphql/queries'
 
-// define some state to hold the data returned from the API
-state = {
-  talks: []
+// imports from Amplify library
+import { API, graphqlOperation } from 'aws-amplify'
+import { withAuthenticator } from 'aws-amplify-react'
+
+function App() {
+  const [talks, updateTalks] = useState([])
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  async function getData() {
+    try {
+      const talkData = await API.graphql(graphqlOperation(ListTalks))
+      console.log('talkData:', talkData)
+      updateTalks(talkData.data.listTalks.items)
+    } catch (err) {
+      console.log('error fetching talks...', err)
+    }
+  }
+
+  return (
+    <div>
+      {
+        talks.map((talk, i) => (
+          <div key={index}>
+            <h3>{talk.speakerName}</h3>
+            <h5>{talk.name}</h5>
+            <p>{talk.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  )
 }
 
-// execute the query in componentDidMount
-async componentDidMount() {
-  try {
-    const talkData = await API.graphql(graphqlOperation(ListTalks))
-    console.log('talkData:', talkData)
-    this.setState({
-      talks: talkData.data.listTalks.items
-    })
-  } catch (err) {
-    console.log('error fetching talks...', err)
-  }
-}
-
-// add UI in render method to show data
-  {
-    this.state.talks.map((talk, index) => (
-      <div key={index}>
-        <h3>{talk.speakerName}</h3>
-        <h5>{talk.name}</h5>
-        <p>{talk.description}</p>
-      </div>
-    ))
-  }
+export default withAuthenticator(App, { includeGreetings: true })
 ```
 
 #### Feel free to add some styling here to your list if you'd like 😀
@@ -271,71 +276,121 @@ async componentDidMount() {
  Now, let's look at how we can create mutations.
 
 ```js
+import React, { useEffect, useReducer } from 'react'
+
 // import uuid to create a unique client ID
 import uuid from 'uuid/v4'
 
-// import the mutation
+// import the mutation and query
 import { createTalk as CreateTalk } from './graphql/mutations'
+import { listTalks as ListTalks } from './graphql/queries'
 
 const CLIENT_ID = uuid()
 
-// update initial state
-state = {
+// create initial state
+const initialState = {
   name: '', description: '', speakerName: '', speakerBio: '', talks: []
 }
 
-createTalk = async() => {
-  const { name, description, speakerBio, speakerName } = this.state
-  if (name === '' || description === '' ||
-  speakerBio === '' || speakerName === '') return
-
-  const talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
-  const talks = [...this.state.talks, talk]
-  this.setState({
-    talks, name: '', description: '', speakerName: '', speakerBio: ''
-  })
-
-  try {
-    await API.graphql(graphqlOperation(CreateTalk, { input: talk }))
-    console.log('item created!')
-  } catch (err) {
-    console.log('error creating talk...', err)
+// create reducer to update state
+function reducer(state, action) {
+  switch(action.type) {
+    case 'SET_TALKS':
+      return { ...state, talks: action.talks }
+    case 'SET_INPUT':
+      return { ...state, [action.key]: action.value }
+    case 'CLEAR_INPUT':
+      return { ...initialState, talks: state.talks }
+    default:
+      return state
   }
 }
 
-// change state then user types into input
-onChange = (event) => {
-  this.setState({
-    [event.target.name]: event.target.value
-  })
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  async function getData() {
+    try {
+      const talkData = await API.graphql(graphqlOperation(ListTalks))
+      console.log('data from API: ', talkData)
+      dispatch({ type: 'SET_TALKS', talks: talkData.data.listTalks.items})
+    } catch (err) {
+      console.log('error fetching data..', err)
+    }
+  }
+
+  createTalk = async() => {
+    const { name, description, speakerBio, speakerName } = state
+    if (name === '' || description === '' ||
+    speakerBio === '' || speakerName === '') return
+
+    const talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
+    const talks = [...this.state.talks, talk]
+    dispatch({ type: 'SET_TALKS', talks })
+    dispatch({ type: 'CLEAR_INPUT' })
+
+    try {
+      await API.graphql(graphqlOperation(CreateTalk, { input: talk }))
+      console.log('item created!')
+    } catch (err) {
+      console.log('error creating talk...', err)
+    }
+  }
+
+  // change state then user types into input
+  function onChange(e) {
+    dispatch({ type: 'SETINPUT', key: e.target.name, value: e.target.value })
+  }
+
+  // add UI with event handlers to manage user input
+  return (
+    <div>
+      // add UI with event handlers to manage user input
+      <input
+        name='name'
+        onChange={onChange}
+        value={state.name}
+        placeholder='name'
+      />
+      <input
+        name='description'
+        onChange={onChange}
+        value={state.description}
+        placeholder='description'
+      />
+      <input
+        name='speakerName'
+        onChange={onChange}
+        value={state.speakerName}
+        placeholder='speakerName'
+      />
+      <input
+        name='speakerBio'
+        onChange={onChange}
+        value={state.speakerBio}
+        placeholder='speakerBio'
+      />
+      <button onClick={createTalk}>Create Talk</button>
+      <div>
+        {
+          talks.map((talk, i) => (
+            <div key={index}>
+              <h3>{talk.speakerName}</h3>
+              <h5>{talk.name}</h5>
+              <p>{talk.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  )
 }
 
-// add UI with event handlers to manage user input
-<input
-  name='name'
-  onChange={this.onChange}
-  value={this.state.name}
-  placeholder='name'
-/>
-<input
-  name='description'
-  onChange={this.onChange}
-  value={this.state.description}
-  placeholder='description'
-/>
-<input
-  name='speakerName'
-  onChange={this.onChange}
-  value={this.state.speakerName}
-  placeholder='speakerName'
-/>
-<input
-  name='speakerBio'
-  onChange={this.onChange}
-  value={this.state.speakerBio}
-  placeholder='speakerBio'
-/>
-<button onClick={this.createTalk}>Create Talk</button>
+export default withAuthenticator(App, { includeGreetings: true })
 ```
 
 ### GraphQL Subscriptions
@@ -348,34 +403,35 @@ To do so, we need to define the subscription, listen for the subscription, & upd
 // import the subscription
 import { onCreateTalk as OnCreateTalk } from './graphql/subscriptions'
 
-// define the subscription in the class
-subscription = {}
+// update reducer
+function reducer(state, action) {
+  switch(action.type) {
+    case 'SET_TALKS':
+      return { ...state, talks: action.talks }
+    case 'SET_INPUT':
+      return { ...state, [action.key]: action.value }
+    case 'CLEAR_INPUT':
+      return { ...initialState, talks: state.talks }
+    // new 👇
+    case 'ADD_TALK':
+      return { ...state, talks: [...state.talks, action.talk] }
+    default:
+      return state
+  }
+}
 
-// subscribe in componentDidMount
-componentDidMount() {
-  this.subscription = API.graphql(
-    graphqlOperation(OnCreateTalk)
-  ).subscribe({
+// subscribe in useEffect
+useEffect(() => {
+  const subscription = API.graphql(graphqlOperation(OnCreateTalk)).subscribe({
       next: (eventData) => {
-        console.log('eventData', eventData)
         const talk = eventData.value.data.onCreateTalk
         if (talk.clientId === CLIENT_ID) return
-        const talks = [ ...this.state.talks, talk ]
-        this.setState({ talks })
+        dispatch({ type: 'ADD_TALK', talk  })
       }
   })
-}
-
-componentWillUnmount() {
-  this.subscription.unsubscribe()
-}
+  return () => subscription.unsubscribe()
+}, [])
 ```
-
-## Challenge
-Recreate this functionality in Hooks
-
-> For direction, check out the tutorial [here](https://medium.com/open-graphql/react-hooks-for-graphql-3fa8ebdd6c62)   
-> For the solution to this challenge, view the [hooks file](https://github.com/dabit3/aws-appsync-react-workshop/blob/master/AppWithHooks.js).
 
 ## Adding Authentication
 
@@ -421,13 +477,14 @@ Now, we can run the app and see that an Authentication flow has been added in fr
 We can access the user's info now that they are signed in by calling `Auth.currentAuthenticatedUser()`.
 
 ```js
+import React, { useEffect } from 'react'
 import { Auth } from 'aws-amplify'
 
-async componentDidMount() {
-  const user = await Auth.currentAuthenticatedUser()
-  console.log('user info:', user.signInUserSession.idToken.payload)
-  console.log('username:', user.username)
-}
+useEffect(() => {
+  Auth.currentAuthenticatedUser()
+    .then(user => console.log('user info: ', user))
+    .catch(err => console.log('error finding user: ', err))
+})
 ```
 
 ### Custom authentication strategies
@@ -442,20 +499,20 @@ To do this, we could create some initial state for these values & create an even
 
 ```js
 // initial state
-state = {
+const initialState = {
   username: '', password: '', email: '', phone_number: ''
 }
 
+const [formState, updateFormState] = useState(initialState)
+
 // event handler
-onChange = (event) => {
-  this.setState({ [event.target.name]: event.target.value })
-}
+onChange = (event) => updateFormState({ ...formState, [event.target.name]: event.target.value })
 
 // example of usage with input
 <input
   name='username'
   placeholder='username'
-  onChange={this.onChange}
+  onChange={onChange}
 />
 ```
 
@@ -467,9 +524,10 @@ import { Auth } from 'aws-amplify'
 
 // Class method to sign up a user
 signUp = async() => {
-  const { username, password, email, phone_number } = this.state
+  const { username, password, email, phone_number } = state
   try {
     await Auth.signUp({ username, password, attributes: { email, phone_number }})
+    console.log('user successfully signed up!')
   } catch (err) {
     console.log('error signing up user...', err)
   }
@@ -542,6 +600,110 @@ type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
 
 If you'd like to read more about the `@auth` directive, check out the documentation [here](https://aws-amplify.github.io/docs/cli/graphql#auth).
 
+## Lambda Resolvers
+
+Next, let's have a look at how to deploy a serverless function and use it as a GraphQL resolver.
+
+The use case we will work with is fetching data from another HTTP API and returning the response via GraphQL. To do this, we'll use a serverless function.
+
+The API we will be working with is the CoinLore API that will allow us to query for cryptocurrency data.
+
+To get started, we'll create the new function:
+
+```sh
+amplify add function
+
+? Provide a friendly name for your resource to be used as a label for this category in the project: currencyfunction
+? Provide the AWS Lambda function name: currencyfunction
+? Choose the function template that you want to use: Hello world function
+? Do you want to access other resources created in this project from your Lambda function? N
+? Do you want to edit the local lambda function now? Y
+```
+
+Update the function with the following code:
+
+```javascript
+// amplify/backend/function/currencyfunction/src/index.js
+const axios = require('axios')
+
+exports.handler = function (event, _, callback) {
+  let apiUrl = `https://api.coinlore.com/api/tickers/?start=1&limit=10`
+
+  if (event.arguments) { 
+    const { start = 0, limit = 10 } = event.arguments
+    apiUrl = `https://api.coinlore.com/api/tickers/?start=${start}&limit=${limit}`
+  }
+
+  axios.get(apiUrl)
+    .then(response => callback(null, response.data.data))
+    .catch(err => callback(err))
+}
+```
+
+In the above function we've used the [axios](https://github.com/axios/axios) library to call another API. In order to use axios, we need to install it in the function folder. We'll also install [uuid](https://github.com/kelektiv/node-uuid) for later use:
+
+```sh
+cd amplify/backend/function/currencyfunction/src
+
+npm install axios uuid
+
+cd ../../../../../
+```
+Next, we'll update the GraphQL schema to add a new type and query. In amplify/backend/api/ConferenceAPI/schema.graphql, update the schema with the following new types:
+
+```graphql
+type Coin {
+  id: String!
+  name: String!
+  symbol: String!
+  price_usd: String!
+}
+
+type Query {
+  getCoins(limit: Int start: Int): [Coin] @function(name: "currencyfunction-${env}")
+}
+```
+
+Now the schema has been updated and the Lambda function has been created. To deploy the updates and make them live, you can run the push command:
+
+```sh
+amplify push
+```
+
+Now, the resources have been deployed and you can try out the query! You can test the query out in the AWS AppSync console. To open the API dashboard, run the following command in your terminal:
+
+```sh
+amplify console api
+
+? Please select from one of the below mentioned services: GraphQL
+```
+
+In the query editor, run the following queries:
+
+```graphql
+# basic request
+query listCoins {
+  getCoins {
+    price_usd
+    name
+    id
+    symbol
+  }
+}
+
+# request with arguments
+query listCoinsWithArgs {
+  getCoins(limit:3 start: 10) {
+    price_usd
+    name
+    id
+    symbol
+  }
+}
+```
+
+This query should return an array of cryptocurrency information.
+
 ## Multiple Serverless Environments
 
 Now that we have our API up & running, what if we wanted to update our API but wanted to test it out without it affecting our existing version?
@@ -575,7 +737,7 @@ Now that the new environment has been created we can get a list of all available
 amplify env list
 ```
 
-Let's update the GraphQL schema to add a new field. In __amplify/backend/api/ConferenceAPI/schema.graphql__  update the schema to the following:
+Let's update the GraphQL schema to add a new field. In __amplify/backend/api/ConferenceAPI/schema.graphql__  update the Talk type in the schema to the following (adding the new `type` field):
 
 ```graphql
 type Talk @model {
@@ -588,14 +750,6 @@ type Talk @model {
   type: String
 }
 
-type ModelTalkConnection {
-  items: [Talk]
-  nextToken: String
-}
-
-type Query {
-  listAllTalks(limit: Int, nextToken: String): ModelTalkConnection
-}
 ```
 
 In the schema we added a new field to the __Talk__ definition to define the type of talk:
@@ -672,10 +826,11 @@ You should now see an __Update__ operation:
 ```
 Current Environment: local
 
-| Category | Resource name   | Operation | Provider plugin   |
-| -------- | --------------- | --------- | ----------------- |
-| Api      | ConferenceAPI   | Update    | awscloudformation |
-| Auth     | cognito75a8ccb4 | No Change | awscloudformation |
+| Category | Resource name    | Operation | Provider plugin   |
+| -------- | ---------------  | --------- | ----------------- |
+| Api      | ConferenceAPI    | Update    | awscloudformation |
+| Auth     | cognito75a8ccb4  | No Change | awscloudformation |
+| Function | currencyfunction | No Change | awscloudformation |
 ```
 
 To deploy the changes, run the push command:
