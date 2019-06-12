@@ -170,8 +170,8 @@ mutation createTalk {
   createTalk(input: {
     name: "Full Stack React"
     description: "Using React to build Full Stack Apps with GraphQL"
-    speakerName: "Nader"
-    speakerBio: "Some guy"
+    speakerName: "Jennifer"
+    speakerBio: "Software Engineer"
   }) {
     id name description speakerName speakerBio
   }
