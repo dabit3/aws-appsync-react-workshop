@@ -23,7 +23,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 
 ## Getting Started - Creating the React Application
 
-To get started, we first need to create a new React project & change into the new directory using the [Create React App CLI](https://github.com/facebook/create-react-app).
+To get started, we first need to create a new React project using the [Create React App CLI](https://github.com/facebook/create-react-app).
 
 ```bash
 npm install -g create-react-app
