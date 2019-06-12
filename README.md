@@ -334,7 +334,7 @@ function App() {
     speakerBio === '' || speakerName === '') return
 
     const talk = { name, description, speakerBio, speakerName, clientId: CLIENT_ID }
-    const talks = [...this.state.talks, talk]
+    const talks = [...state.talks, talk]
     dispatch({ type: 'SET_TALKS', talks })
     dispatch({ type: 'CLEAR_INPUT' })
 
