@@ -91,7 +91,7 @@ amplify init
 - Do you want to use an AWS profile? __Y__
 - Please choose the profile you want to use: __amplify-workshop-user__
 
-Now, the AWS Amplify CLI has iniatilized a new project & you will see a new folder: __amplify__ & a new file called `aws-export.js` in the __src__ directory. These files hold your project configuration.
+Now, the AWS Amplify CLI has iniatilized a new project & you will see a new folder: __amplify__ & a new file called `aws-exports.js` in the __src__ directory. These files hold your project configuration.
 
 To view the status of the amplify project at any time, you can run the Amplify `status` command:
 
@@ -485,132 +485,22 @@ To do so, we'll reconfigure the API:
 ```sh
 amplify configure api
 
-> Please select from one of the below mentioned services: GraphQL   
-> Choose an authorization type for the API: Amazon Cognito User Pool
+? Please select from one of the below mentioned services: GraphQL   
+? Choose an authorization type for the API: Amazon Cognito User Pool
 
-amplify push
-```
-
-### Fine Grained access control
-
-To add authorization to the API, we can re-configure the API to use our cognito identity pool. To do so, we can run `amplify configure api`:
-
-```sh
-amplify configure api
-```
-Please select from one of the below mentioned services: __GraphQL__   
-Choose an authorization type for the API: __Amazon Cognito User Pool__
-
-Next, we'll run `amplify push`:
-
-```sh
 amplify push
 ```
 
 Now, we can only access the API with a logged in user.
 
-Next, let's look at how to use the identity of the user to associate items created in the database with the logged in user & then query the database using these credentials.
+### Fine Grained access control - Using the @auth directive
 
-To do so, we'll store the user's identity in the database table as userId & add a new index on the table to query for this user ID.
+Next, let's add a field that can only be accessed by the current user.
 
-#### Adding an index to the table
-
-Next, we'll want to add a new GSI (global secondary index) in the table. We do this so we can query on the index to gain new data access pattern.
-
-To add the index, open the [AppSync Console](https://console.aws.amazon.com/appsync/home), choose your API & click on __Data Sources__. Next, click on the data source link.
-
-From here, click on the __Indexes__ tab & click __Create index__.
-
-For the __partition key__, input `userId` to create a `userId-index` Index name & click __Create index__.
-
-Next, we'll update the resolver for adding talks & querying for talks.
-
-#### Updating the resolvers
-
-In the folder __amplify/backend/api/ConferenceAPI/resolvers__, create the following two resolvers:
-
-__Mutation.createTalk.req.vtl__ & __Query.listTalks.req.vtl__.
-
-__Mutation.createTalk.req.vtl__
-
-```vtl
-$util.qr($context.args.input.put("createdAt", $util.time.nowISO8601()))
-$util.qr($context.args.input.put("updatedAt", $util.time.nowISO8601()))
-$util.qr($context.args.input.put("__typename", "Talk"))
-$util.qr($context.args.input.put("userId", $ctx.identity.sub))
-
-{
-  "version": "2017-02-28",
-  "operation": "PutItem",
-  "key": {
-      "id":     $util.dynamodb.toDynamoDBJson($util.defaultIfNullOrBlank($ctx.args.input.id, $util.autoId()))
-  },
-  "attributeValues": $util.dynamodb.toMapValuesJson($context.args.input),
-  "condition": {
-      "expression": "attribute_not_exists(#id)",
-      "expressionNames": {
-          "#id": "id"
-    }
-  }
-}
-```
-
-__Query.listTalks.req.vtl__
-
-```vtl
-{
-    "version" : "2017-02-28",
-    "operation" : "Query",
-    "index" : "userId-index",
-    "query" : {
-        "expression": "userId = :userId",
-        "expressionValues" : {
-            ":userId" : $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
-        }
-    }
-}
-```
-
-Next, run the push command again to update the API:
-
-```sh
-amplify push
-```
-
-> Now that we've added authorization to the API, we will have to log in if we would like to perform queries in the AppSync Console. To log in, find the `aws_user_pools_web_client_id` from `aws-exports.js` & log in using your `username` & `password`.
-
-Now when we create new talks the `userId` field will be populated with the `userId` of the logged-in user.
-
-When we query for the talks, we will only receive the talk data for the items that we created ourselves.
+To do so, we'll update the schema to add the `@auth` directive to the Talk type in the schema:
 
 ```graphql
-query listTalks {
-  listTalks {
-    items {
-      id
-      name
-      description
-      speakerName
-      speakerBio
-    }
-  }
-}
-```
-
-#### Creating custom resolvers
-
-Now let's say we want to define & use a custom GraphQL operation & create corresponding resolvers that do not yet exist? We can also do that using Amplify & the local environment.
-
-Let's create a query & resolvers that will query for __all__ talks in the API, similar to the functionality we had before changing the `listTalks` resolver.
-
-To do so, we need to do three things:
-
-1. Define the operations we'd like to have available in our schema (add queries, mutations, subscriptions to __schema.graphql__).
-
-To do so, update __amplify/backend/api/ConferenceAPI/schema.graphql__ to the following:
-
-```graphql
-type Talk @model {
+type Talk @model @auth(rules: [{allow: owner}]) {
   id: ID!
   clientId: ID
   name: String!
@@ -618,94 +508,39 @@ type Talk @model {
   speakerName: String!
   speakerBio: String!
 }
-
-type ModelTalkConnection {
-  items: [Talk]
-  nextToken: String
-}
-
-type Query {
-  listAllTalks(limit: Int, nextToken: String): ModelTalkConnection
-}
 ```
 
-2. Create the request & response mapping templates in __amplify/backend/api/ConferenceAPI/resolvers__.
-
-__Query.listAllTalks.req.vtl__
-
-```vtl
-{
-    "version" : "2017-02-28",
-    "operation" : "Scan",
-    "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
-    "nextToken": $util.toJson($util.defaultIfNullOrBlank($ctx.args.nextToken, null))
-}
-```
-
-__Query.listAllTalks.res.vtl__
-
-```vtl
-{
-    "items": $util.toJson($ctx.result.items),
-    "nextToken": $util.toJson($util.defaultIfNullOrBlank($context.result.nextToken, null))
-}
-```
-
-3. Update __amplify/backend/api/ConferenceAPI/stacks/CustomResources.json__ with the definition of the custom resource.
-
-Update the `Resources` field in __CustomResources.json__ to the following:
-
-```json
-{
-  ...rest of template,
-  "Resources": {
-    "QueryListAllTalksResolver": {
-      "Type": "AWS::AppSync::Resolver",
-      "Properties": {
-        "ApiId": {
-          "Ref": "AppSyncApiId"
-        },
-        "DataSourceName": "TalkTable",
-        "TypeName": "Query",
-        "FieldName": "listAllTalks",
-        "RequestMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.listAllTalks.req.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        },
-        "ResponseMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Query.listAllTalks.res.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
-  ...rest of template,
-}
-```
-
-Now that everything has been updated, run the push command again:
+Next, we'll deploy the updates to our API:
 
 ```sh
 amplify push
+
+? Do you want to update code for your updated GraphQL API: Y
+? Do you want to generate GraphQL statements (queries, mutations and subscription) based on your schema types? Y
 ```
+
+Now, the operations associated with this field will only be accessible by the creator of the item.
+
+To test it out, try creating a new user & accessing a note from another user.
+
+To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
+
+#### Updating the @auth directive
+
+What if you'd like to update the app to allow __anyone__ to read the `Talk` data but only the owner to update or delete any data? The `@auth` directive can be configured with custom rules. We can set the `queries` field to null if we do not want any rules to be applied to any of the queries.
+
+```graphql
+type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
+  id: ID!
+  clientId: ID
+  name: String!
+  description: String!
+  speakerName: String!
+  speakerBio: String!
+}
+```
+
+If you'd like to read more about the `@auth` directive, check out the documentation [here](https://aws-amplify.github.io/docs/cli/graphql#auth).
 
 ## Multiple Serverless Environments
 
