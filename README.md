@@ -525,7 +525,7 @@ To test it out, try creating a new user & accessing a note from another user.
 
 To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
 
-#### Updating the @auth directive
+### Updating the @auth directive
 
 What if you'd like to update the app to allow __anyone__ to read the `Talk` data but only the owner to update or delete any data? The `@auth` directive can be configured with custom rules. We can set the `queries` field to null if we do not want any rules to be applied to any of the queries.
 
