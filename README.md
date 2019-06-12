@@ -123,7 +123,7 @@ To add a GraphQL API, we can use the following command:
 ```sh
 amplify add api
 
-? Please select from one of the above mentioned services GraphQL
+? Please select from one of the above mentioned services: GraphQL
 ? Provide API name: ConferenceAPI
 ? Choose an authorization type for the API: API key
 ? Do you have an annotated GraphQL schema? N 
