@@ -346,7 +346,7 @@ function App() {
 
   // change state then user types into input
   function onChange(e) {
-    dispatch({ type: 'SETINPUT', key: e.target.name, value: e.target.value })
+    dispatch({ type: 'SET_INPUT', key: e.target.name, value: e.target.value })
   }
 
   // add UI with event handlers to manage user input
@@ -380,7 +380,7 @@ function App() {
       <button onClick={createTalk}>Create Talk</button>
       <div>
         {
-          talks.map((talk, i) => (
+          state.talks.map((talk, index) => (
             <div key={index}>
               <h3>{talk.speakerName}</h3>
               <h5>{talk.name}</h5>
