@@ -648,12 +648,12 @@ exports.handler = function (event, _, callback) {
 }
 ```
 
-In the above function we've used the [axios](https://github.com/axios/axios) library to call another API. In order to use axios, we need to install it in the function folder. We'll also install [uuid](https://github.com/kelektiv/node-uuid) for later use:
+In the above function we've used the [axios](https://github.com/axios/axios) library to call another API. In order to use axios, we need to install it in the function folder:
 
 ```sh
 cd amplify/backend/function/currencyfunction/src
 
-npm install axios uuid
+npm install axios
 
 cd ../../../../../
 ```
