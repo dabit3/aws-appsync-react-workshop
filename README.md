@@ -356,7 +356,6 @@ function App() {
   // add UI with event handlers to manage user input
   return (
     <div>
-      // add UI with event handlers to manage user input
       <input
         name='name'
         onChange={onChange}
