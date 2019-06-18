@@ -447,7 +447,7 @@ To add authentication, we can use the following command:
 amplify add auth
 ```
 
-- __Do you want to use default authentication and security configuration?__, choose __Default configuration__   
+- Do you want to use default authentication and security configuration? __Default configuration__   
 - How do you want users to be able to sign in when using your Cognito User Pool? __Username__   
 - What attributes are required for signing up? __Email__ (keep default)
 
