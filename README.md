@@ -506,7 +506,7 @@ To do this, we could create some initial state for these values & create an even
 ```js
 // initial state
 const initialState = {
-  username: '', password: '', email: '', phone_number: ''
+  username: '', password: '', email: ''
 }
 
 const [formState, updateFormState] = useState(initialState)
@@ -530,9 +530,9 @@ import { Auth } from 'aws-amplify'
 
 // Class method to sign up a user
 async function signUp() => {
-  const { username, password, email, phone_number } = state
+  const { username, password, email } = state
   try {
-    await Auth.signUp({ username, password, attributes: { email, phone_number }})
+    await Auth.signUp({ username, password, attributes: { email }})
     console.log('user successfully signed up!')
   } catch (err) {
     console.log('error signing up user...', err)
