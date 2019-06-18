@@ -256,7 +256,7 @@ function App() {
   return (
     <div>
       {
-        talks.map((talk, i) => (
+        talks.map((talk, index) => (
           <div key={index}>
             <h3>{talk.speakerName}</h3>
             <h5>{talk.name}</h5>
@@ -283,6 +283,7 @@ export default App
 
 ```js
 import React, { useEffect, useReducer } from 'react'
+import { API, graphqlOperation } from 'aws-amplify'
 
 // import uuid to create a unique client ID
 import uuid from 'uuid/v4'
@@ -329,7 +330,7 @@ function App() {
     }
   }
 
-  createTalk = async() => {
+  async function createTalk() {
     const { name, description, speakerBio, speakerName } = state
     if (name === '' || description === '' ||
     speakerBio === '' || speakerName === '') return
@@ -383,7 +384,7 @@ function App() {
       <button onClick={createTalk}>Create Talk</button>
       <div>
         {
-          talks.map((talk, i) => (
+          state.talks.map((talk, index) => (
             <div key={index}>
               <h3>{talk.speakerName}</h3>
               <h5>{talk.name}</h5>
