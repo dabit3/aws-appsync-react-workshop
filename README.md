@@ -772,9 +772,9 @@ Now, we can run amplify push again to update the API:
 amplify push
 ```
 
-To test this out, we can go into the [AppSync Console](https://console.aws.amazon.com/appsync) & log into the API.
+To test this out, we can go into the [AppSync Console](https://console.aws.amazon.com/appsync).
 
-You should now see a new API called __ConferenceAPI-apiupdate__. Click on this API to view the API dashboard.
+Here, you should now see a new API called __ConferenceAPI-apiupdate__. Click on this API to view the API dashboard.
 
 If you click on __Schema__ you should notice that it has been created with the new __type__ field. Let's try it out.
 
