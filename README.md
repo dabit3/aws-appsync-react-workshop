@@ -235,7 +235,6 @@ import { listTalks as ListTalks } from './graphql/queries'
 
 // imports from Amplify library
 import { API, graphqlOperation } from 'aws-amplify'
-import { withAuthenticator } from 'aws-amplify-react'
 
 function App() {
   const [talks, updateTalks] = useState([])
@@ -269,7 +268,7 @@ function App() {
   )
 }
 
-export default withAuthenticator(App, { includeGreetings: true })
+export default App
 ```
 
 #### Feel free to add some styling here to your list if you'd like 😀
@@ -397,7 +396,7 @@ function App() {
   )
 }
 
-export default withAuthenticator(App, { includeGreetings: true })
+export default App
 ```
 
 ### GraphQL Subscriptions
