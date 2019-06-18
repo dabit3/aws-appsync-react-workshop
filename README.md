@@ -557,6 +557,8 @@ amplify push
 
 Now, we can only access the API with a logged in user.
 
+To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
+
 ### Fine Grained access control - Using the @auth directive
 
 Next, let's add a field that can only be accessed by the current user.
@@ -585,7 +587,7 @@ amplify push
 
 Now, the operations associated with this field will only be accessible by the creator of the item.
 
-To test it out, try creating a new user & accessing a note from another user.
+To test it out, try creating a new user & accessing a talk from another user.
 
 To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
 
