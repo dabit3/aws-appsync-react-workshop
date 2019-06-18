@@ -490,7 +490,7 @@ useEffect(() => {
   Auth.currentAuthenticatedUser()
     .then(user => console.log('user info: ', user))
     .catch(err => console.log('error finding user: ', err))
-})
+}, [])
 ```
 
 ### Custom authentication strategies
