@@ -350,7 +350,7 @@ function App() {
 
   // change state then user types into input
   function onChange(e) {
-    dispatch({ type: 'SETINPUT', key: e.target.name, value: e.target.value })
+    dispatch({ type: 'SET_INPUT', key: e.target.name, value: e.target.value })
   }
 
   // add UI with event handlers to manage user input
