@@ -79,7 +79,7 @@ amplify init
 ```
 
 - Enter a name for the project: __amplifyreactapp__
-- Enter a name for the environment: __master__
+- Enter a name for the environment: __dev__
 - Choose your default editor: __Visual Studio Code (or your default editor)__   
 - Please choose the type of app that you're building __javascript__   
 - What javascript framework are you using __react__   
@@ -815,7 +815,7 @@ query listAllTalks {
 Now that we've created a new environment & tested it out, let's check out the main environment.
 
 ```sh
-amplify env checkout local
+amplify env checkout dev
 ```
 
 Next, run the `status` command:
@@ -827,7 +827,7 @@ amplify status
 You should now see an __Update__ operation:
 
 ```
-Current Environment: local
+Current Environment: dev
 
 | Category | Resource name    | Operation | Provider plugin   |
 | -------- | ---------------  | --------- | ----------------- |
