@@ -733,7 +733,7 @@ amplify env add
 > Please choose the profile you want to use: amplify-workshop-user
 ```
 
-Now, the new environment has been initialize, & we can deploy the new environment using the `push` command:
+Now, the new environment has been initialized, & we can deploy the new environment using the `push` command:
 
 ```sh
 amplify push
