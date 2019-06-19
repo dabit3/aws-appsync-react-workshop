@@ -9,7 +9,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-appsync-react-workshop#adding-a-graphql-api)
 - [Authentication](https://github.com/dabit3/aws-appsync-react-workshop#adding-authentication)
 - [Adding Authorization to the AWS AppSync API](https://github.com/dabit3/aws-appsync-react-workshop#adding-authorization-to-the-graphql-api)
-- [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-resolvers)
+- [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-graphql-resolvers)
 - [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-appsync-react-workshop#multiple-serverless-environments)
 - [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
