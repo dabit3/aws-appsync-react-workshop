@@ -730,7 +730,7 @@ amplify env add
 > Do you want to use an existing environment? No
 > Enter a name for the environment: apiupdate
 > Do you want to use an AWS profile? Yes
-> Please choose the profile you want to use: appsync-workshop-profile
+> Please choose the profile you want to use: amplify-workshop-user
 ```
 
 Now, the new environment has been initialize, & we can deploy the new environment using the `push` command:
