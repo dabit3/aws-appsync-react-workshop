@@ -493,53 +493,6 @@ useEffect(() => {
 }, [])
 ```
 
-### Custom authentication strategies
-
-The `withAuthenticator` component is a really easy way to get up and running with authentication, but in a real-world application we probably want more control over how our form looks & functions.
-
-Let's look at how we might create our own authentication flow.
-
-To get started, we would probably want to create input fields that would hold user input data in the state. For instance when signing up a new user, we would probably need 4 user inputs to capture the user's username, email, password, & phone number.
-
-To do this, we could create some initial state for these values & create an event handler that we could attach to the form inputs:
-
-```js
-// initial state
-const initialState = {
-  username: '', password: '', email: ''
-}
-
-const [formState, updateFormState] = useState(initialState)
-
-// event handler
-onChange = (event) => updateFormState({ ...formState, [event.target.name]: event.target.value })
-
-// example of usage with input
-<input
-  name='username'
-  placeholder='username'
-  onChange={onChange}
-/>
-```
-
-We'd also need to have a method that signed up & signed in users. We can us the Auth class to do thi. The Auth class has over 30 methods including things like `signUp`, `signIn`, `confirmSignUp`, `confirmSignIn`, & `forgotPassword`. Thes functions return a promise so they need to be handled asynchronously.
-
-```js
-// import the Auth component
-import { Auth } from 'aws-amplify'
-
-// Class method to sign up a user
-async function signUp() => {
-  const { username, password, email } = state
-  try {
-    await Auth.signUp({ username, password, attributes: { email }})
-    console.log('user successfully signed up!')
-  } catch (err) {
-    console.log('error signing up user...', err)
-  }
-}
-```
-
 ## Adding Authorization to the GraphQL API
 
 Next we need to update the AppSync API to now use the newly created Cognito Authentication service as the authentication type.
