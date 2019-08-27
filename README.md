@@ -511,7 +511,7 @@ Now, we can only access the API with a logged in user.
 
 Next, let's add a field that can only be accessed by the user who created it.
 
-To do so, we'll update the schema to add the phone field. Here we attach the `@auth` directive to the phone field in the schema:
+To do so, we'll update the schema to add the speakerPhone field. Here we attach the `@auth` directive to the speakerPhone field in the schema:
 
 ```graphql
 type Talk @model {
@@ -521,7 +521,7 @@ type Talk @model {
   description: String!
   speakerName: String!
   speakerBio: String!
-  phone: String @auth(rules: [{allow: owner}])
+  speakerPhone: String @auth(rules: [{allow: owner}])
 }
 ```
 
@@ -533,13 +533,13 @@ Next, we'll test out the updated API:
 amplify mock api
 ```
 
-Now, the phone field will only be accessible by the creator of the item.
+Now, the speakerPhone field will only be accessible by the creator of the item.
 
 To test it out, try creating a new user & accessing a talk from another user.
 
-You'll notice that the query returns an error if we request the `phone` field.
+You'll notice that the query returns an error if we request the `speakerPhone` field.
 
-You'll also notice that the React app fails because the query for `listTalks` asks for the `phone` field. To fix this, remove the `phone` field from the `listTalks` query in 'src/graphql/queries`.
+You'll also notice that the React app fails because the query for `listTalks` asks for the `speakerPhone` field. To fix this, remove the `speakerPhone` field from the `listTalks` query in 'src/graphql/queries`.
 
 ###  GraphQL Type level authorization with the @auth directive
 
@@ -572,7 +572,7 @@ type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
   description: String!
   speakerName: String!
   speakerBio: String!
-  phone: String @auth(rules: [{allow: owner}])
+  speakerPhone: String @auth(rules: [{allow: owner}])
   comments: [Comment] @connection(name: "TalkComments")
 }
 
