@@ -145,7 +145,7 @@ type Talk @model {
 }
 ```
 
-## Local testing and mocking
+## Local mocking and testing
 
 To mock and test the API locally, you can run the `mock` command:
 
