@@ -11,7 +11,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [Authentication](https://github.com/dabit3/aws-appsync-react-workshop#adding-authentication)
 - [Adding Authorization to the AWS AppSync API](https://github.com/dabit3/aws-appsync-react-workshop#adding-authorization-to-the-graphql-api)
 - [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-graphql-resolvers)
-- [Deploying the API](https://github.com/dabit3/aws-appsync-react-workshop#deploying-the-api)
+- [Deploying the Services](https://github.com/dabit3/aws-appsync-react-workshop#deploying-the-services)
 - [Hosting with the Amplify Console](https://github.com/dabit3/aws-appsync-react-workshop#hosting-via-the-amplify-console)
 - [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
@@ -724,9 +724,9 @@ query listCoinsWithArgs {
 
 This query should return an array of cryptocurrency information.
 
-## Deploying the API
+## Deploying the Services
 
-Next, let's deploy the AppSync GraphQL API:
+Next, let's deploy the AppSync GraphQL API and the Lambda function:
 
 ```bash
 amplify push
