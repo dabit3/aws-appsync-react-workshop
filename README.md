@@ -692,18 +692,10 @@ type Query {
 }
 ```
 
-Now the schema has been updated and the Lambda function has been created. To deploy the updates and make them live, you can run the push command:
+Now the schema has been updated and the Lambda function has been created. To test it out, you can run the mock command:
 
 ```sh
-amplify push
-```
-
-Now, the resources have been deployed and you can try out the query! You can test the query out in the AWS AppSync console. To open the API dashboard, run the following command in your terminal:
-
-```sh
-amplify console api
-
-? Please select from one of the below mentioned services: GraphQL
+amplify mock
 ```
 
 In the query editor, run the following queries:
