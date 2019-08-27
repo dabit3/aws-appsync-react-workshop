@@ -13,7 +13,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-graphql-resolvers)
 - [Deploying the Services](https://github.com/dabit3/aws-appsync-react-workshop#deploying-the-services)
 - [Hosting with the Amplify Console](https://github.com/dabit3/aws-appsync-react-workshop#hosting-via-the-amplify-console)
-- [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
+- [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#deleting-entire-project)
 
 ## Redeeming the AWS Credit   
 
