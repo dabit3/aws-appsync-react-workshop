@@ -7,11 +7,13 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 ### Topics we'll be covering:
 
 - [GraphQL API with AWS AppSync](https://github.com/dabit3/aws-appsync-react-workshop#adding-a-graphql-api)
-- [Mocking and Testing]()
+- [Mocking and Testing](https://github.com/dabit3/aws-appsync-react-workshop#local-mocking-and-testing)
 - [Authentication](https://github.com/dabit3/aws-appsync-react-workshop#adding-authentication)
 - [Adding Authorization to the AWS AppSync API](https://github.com/dabit3/aws-appsync-react-workshop#adding-authorization-to-the-graphql-api)
 - [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-graphql-resolvers)
 - [Creating & working with multiple serverless environments](https://github.com/dabit3/aws-appsync-react-workshop#multiple-serverless-environments)
+- [Deploying the services](https://github.com/dabit3/aws-appsync-react-workshop#deploying-the-services)
+- [Hosting with the Amplify Console](https://github.com/dabit3/aws-appsync-react-workshop#hosting-via-the-amplify-console)
 - [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
 ## Redeeming the AWS Credit   
@@ -144,27 +146,24 @@ type Talk @model {
 }
 ```
 
-> Next, let's deploy the API into our account:
+## Local testing and mocking
 
-```bash
-amplify push
-
-? Do you want to generate code for your newly created GraphQL API? Y
-? Choose the code generation language target: javascript
-? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
-? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? Y
-? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
-```
-
-To view the new AWS AppSync API at any time after its creation, run the following command:
+To mock and test the API locally, you can run the `mock` command:
 
 ```sh
-amplify console api
+amplify mock api
+
+? Choose the code generation language target: javascript
+? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
+? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions: Y
+? Enter maximum statement depth [increase from default if your schema is deeply nested]: 2
 ```
 
-### Performing mutations from within the AWS AppSync Console
+This should open up the local GraphiQL editor at [http://192.168.98.98:20002/](http://192.168.98.98:20002/).
 
-In the AWS AppSync console, open your API & then click on Queries.
+From here, we can now test the API.
+
+### Performing mutations from within the local testing environment
 
 Execute the following mutation to create a new talk in the API:
 
@@ -181,7 +180,7 @@ mutation createTalk {
 }
 ```
 
-Now, let's query for the talk:
+Now, let's query for the talks:
 
 ```graphql
 query listTalks {
@@ -200,7 +199,7 @@ query listTalks {
 We can even add search / filter capabilities when querying:
 
 ```graphql
-query listTalks {
+query listTalksWithFilter {
   listTalks(filter: {
     description: {
       contains: "React"
@@ -219,7 +218,7 @@ query listTalks {
 
 ### Interacting with the GraphQL API from our client application - Querying for data
 
-Now that the GraphQL API is created we can begin interacting with it!
+Now that the GraphQL API server is running we can begin interacting with it!
 
 The first thing we'll do is perform a query to fetch data from our API.
 
@@ -446,24 +445,15 @@ To add authentication, we can use the following command:
 
 ```sh
 amplify add auth
+
+? Do you want to use default authentication and security configuration? Default configuration 
+? How do you want users to be able to sign in when using your Cognito User Pool? Username   
+? What attributes are required for signing up? Email (keep default)
 ```
-
-- Do you want to use default authentication and security configuration? __Default configuration__   
-- How do you want users to be able to sign in when using your Cognito User Pool? __Username__   
-- What attributes are required for signing up? __Email__ (keep default)
-
-Now, we'll run the push command and the cloud resources will be created in our AWS account.
-
-```bash
-amplify push
-```
-
-> To view the new Cognito authentication service at any time after its creation, go to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
-
 
 ### Using the withAuthenticator component
 
-To add authentication, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
+To add authentication in the React app, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
 
 ```js
 import { withAuthenticator } from 'aws-amplify-react'
@@ -475,9 +465,13 @@ Next, we'll wrap our default export (the App component) with the `withAuthentica
 export default withAuthenticator(App, { includeGreetings: true })
 ```
 
-Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
+To deploy the authentication service and mock and test the app locally, you can run the `mock` command:
 
-> To view the new user that was created in Cognito, go back to the dashboard at [https://console.aws.amazon.com/cognito/](https://console.aws.amazon.com/cognito/). Also be sure that your region is set correctly.
+```sh
+amplify mock
+```
+
+Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
 
 ### Accessing User Data
 
@@ -505,49 +499,71 @@ amplify configure api
 
 ? Please select from one of the below mentioned services: GraphQL   
 ? Choose an authorization type for the API: Amazon Cognito User Pool
-
-amplify push
 ```
 
-Now, we can only access the API with a logged in user.
+Next, we'll test out the API with authentication enabled:
 
-To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
+```sh
+amplify mock api
+```
+Now, we can only access the API with a logged in user.
 
 ### Fine Grained access control - Using the @auth directive
 
-Next, let's add a field that can only be accessed by the current user.
+Next, let's add a field that can only be accessed by the user who created it.
 
-To do so, we'll update the schema to add the `@auth` directive to the Talk type in the schema:
+To do so, we'll update the schema to add the phone field. Here we attach the `@auth` directive to the phone field in the schema:
 
 ```graphql
-type Talk @model @auth(rules: [{allow: owner}]) {
+type Talk @model {
   id: ID!
   clientId: ID
   name: String!
   description: String!
   speakerName: String!
   speakerBio: String!
+  phone: String @auth(rules: [{allow: owner}])
 }
 ```
 
-Next, we'll deploy the updates to our API:
+__allow:owner__ - This sets a field to only be readable or updatable by the creator.
+
+Next, we'll test out the updated API:
 
 ```sh
-amplify push
-
-? Do you want to update code for your updated GraphQL API: Y
-? Do you want to generate GraphQL statements (queries, mutations and subscription) based on your schema types? Y
+amplify mock api
 ```
 
-Now, the operations associated with this field will only be accessible by the creator of the item.
+Now, the phone field will only be accessible by the creator of the item.
 
 To test it out, try creating a new user & accessing a talk from another user.
 
-To test the API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
+You'll notice that the query returns an error if we request the `phone` field.
 
-### Updating the @auth directive
+You'll also notice that the React app fails because the query for `listTalks` asks for the `phone` field. To fix this, remove the `phone` field from the `listTalks` query in 'src/graphql/queries`.
 
-What if you'd like to update the app to allow __anyone__ to read the `Talk` data but only the owner to update or delete any data? The `@auth` directive can be configured with custom rules. We can set the `queries` field to null if we do not want any rules to be applied to any of the queries.
+###  GraphQL Type level authorization with the @auth directive
+
+What if you'd like to have a `Comment` type that could only be updated or deleted by the creator of the `Comment` but can be read by anyone?
+
+We could use the following type:
+
+```graphql
+type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+  id: ID!
+  message: String
+  createdBy: String
+}
+```
+
+__queries: null__ - This removes any authorization rules for queries, allowing anyone to query for talks.
+__ownerField:createdBy__ - This sets the createdBy field as the currently signed in user.
+
+This would allow us to create comments that only the creator of the Comment could delete, but anyone could read.
+
+### Relationships
+
+What if we wanted to create a relationship between the Comment and the Talk? That's pretty easy. We can use the `@connection` directive:
 
 ```graphql
 type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
@@ -557,6 +573,57 @@ type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
   description: String!
   speakerName: String!
   speakerBio: String!
+  phone: String @auth(rules: [{allow: owner}])
+  comments: [Comment] @connection(name: "TalkComments")
+}
+
+type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+  id: ID!
+  message: String
+  createdBy: String
+  talk: Talk @connection(name: "TalkComments")
+}
+```
+
+Now, we can create relationships between talks and comments. Let's test this out with the following operations:
+
+```graphql
+mutation createTalk {
+  createTalk(input: {
+    id: "test-id-talk-1"
+    name: "Talk 1"
+    description: "Cool talk"
+    speakerBio: "Cool gal"
+    speakerName: "Jennifer"
+  }) {
+    id
+    name
+    description
+  }
+}
+
+mutation createComment {
+  createComment(input: {
+    commentTalkId: "test-id-talk-1"
+    message: "Great talk"
+  }) {
+    id message
+  }
+}
+
+query listTalks {
+  listTalks {
+    items {
+      id
+      name
+      description
+      comments {
+        items {
+          message
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -815,10 +882,37 @@ Now, we should be able to run the `list` command & see only our main environment
 amplify env list
 ```
 
+## Deploying the services
 
-## Deploying via the Amplify Console
+Next, let's deploy the AppSync GraphQL API:
 
-We have looked at deploying via the Amplify CLI hosting category, but what about if we wanted continous deployment? For this, we can use the [Amplify Console](https://aws.amazon.com/amplify/console/) to deploy the application.
+```bash
+amplify push
+
+? Do you want to generate code for your newly created GraphQL API? Y
+? Choose the code generation language target: javascript
+? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
+? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? Y
+? Enter maximum statement depth [increase from default if your schema is deeply nested] 2
+```
+
+To view the new AWS AppSync API at any time after its creation, run the following command:
+
+```sh
+amplify console api
+```
+
+To view the Cognito User Pool at any time after its creation, run the following command:
+
+```sh
+amplify console auth
+```
+
+To test an authenticated API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
+
+## Hosting via the Amplify Console
+
+The Amplify Console is a hosting service with continuous integration and continuous deployment.
 
 The first thing we need to do is [create a new GitHub repo](https://github.com/new) for this project. Once we've created the repo, we'll copy the URL for the project to the clipboard & initialize git in our local project:
 
