@@ -799,3 +799,9 @@ amplify status
 ```
 
 `amplify status` will give you the list of resources that are currently enabled in your app.
+
+If you'd like to delete the entire project, you can run the `delete` command:
+
+```sh
+amplify delete
+```
