@@ -509,6 +509,8 @@ amplify mock
 ```
 Now, we can only access the API with a logged in user.
 
+You'll also notice a new __auth__ button in the GraphiQL explorer that will allow you to update the simulated user.
+
 ### Fine Grained access control - Using the @auth directive
 
 Next, let's add a field that can only be accessed by the user who created it.
@@ -537,7 +539,7 @@ amplify mock
 
 Now, the speakerPhone field will only be accessible by the creator of the item.
 
-To test it out, try creating a new user & accessing a talk from another user.
+To test it out, try creating a new user & accessing a talk from a different user.
 
 You'll notice that the query returns an error if we request the `speakerPhone` field.
 
