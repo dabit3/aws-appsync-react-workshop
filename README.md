@@ -559,7 +559,7 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 }
 ```
 
-__queries: null__ - This removes any authorization rules for queries, allowing anyone to query for talks.
+__queries: null__ - This removes any authorization rules for queries, allowing anyone to query for talks.   
 __ownerField:createdBy__ - This sets the createdBy field as the currently signed in user.
 
 This would allow us to create comments that only the creator of the Comment could delete, but anyone could read.
