@@ -158,7 +158,7 @@ amplify mock api
 ? Enter maximum statement depth [increase from default if your schema is deeply nested]: 2
 ```
 
-This should open up the local GraphiQL editor at [http://192.168.98.98:20002/](http://192.168.98.98:20002/).
+This should open up the local GraphiQL editor.
 
 From here, we can now test the API.
 
