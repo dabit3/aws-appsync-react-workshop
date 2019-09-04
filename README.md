@@ -505,7 +505,7 @@ amplify configure api
 Next, we'll test out the API with authentication enabled:
 
 ```sh
-amplify mock api
+amplify mock
 ```
 Now, we can only access the API with a logged in user.
 
@@ -532,7 +532,7 @@ __allow:owner__ - This sets a field to only be readable or updatable by the crea
 Next, we'll test out the updated API:
 
 ```sh
-amplify mock api
+amplify mock
 ```
 
 Now, the speakerPhone field will only be accessible by the creator of the item.
