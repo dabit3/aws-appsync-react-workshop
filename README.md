@@ -455,12 +455,14 @@ amplify add auth
 To add authentication in the React app, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
 
 ```js
+// src/App.js
 import { withAuthenticator } from 'aws-amplify-react'
 ```
 
 Next, we'll wrap our default export (the App component) with the `withAuthenticator` HOC:
 
 ```js
+// src/App.js
 export default withAuthenticator(App, { includeGreetings: true })
 ```
 
