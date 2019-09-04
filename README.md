@@ -569,7 +569,7 @@ This would allow us to create comments that only the creator of the Comment coul
 What if we wanted to create a relationship between the Comment and the Talk? That's pretty easy. We can use the `@connection` directive:
 
 ```graphql
-type Talk @model @auth(rules: [{allow: owner, queries: null}]) {
+type Talk @model {
   id: ID!
   clientId: ID
   name: String!
