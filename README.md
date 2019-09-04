@@ -588,6 +588,18 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 }
 ```
 
+Becuase we're updating the way our database is configued by adding relationships which requires a global secondary index, we need to delete the old data:
+
+```sh
+rm -r amplify/mock-data
+```
+
+Now, restart the server:
+
+```sh
+amplify mock
+```
+
 Now, we can create relationships between talks and comments. Let's test this out with the following operations:
 
 ```graphql
