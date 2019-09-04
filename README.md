@@ -644,6 +644,40 @@ query listTalks {
 
 If you'd like to read more about the `@auth` directive, check out the documentation [here](https://aws-amplify.github.io/docs/cli/graphql#auth).
 
+### Groups
+
+The last problem we are facing is that *anyone* signed in can create a new talk. Let's add authorization that only allows users that are in an __Admin__ group to create and update talks.
+
+```graphql
+type Talk @model @auth(rules: [{ allow: groups, groups: ["Admin"], queries: null }]) {
+  id: ID!
+  clientId: ID
+  name: String!
+  description: String!
+  speakerName: String!
+  speakerBio: String!
+  speakerPhone: String @auth(rules: [{allow: owner}])
+  comments: [Comment] @connection(name: "TalkComments")
+}
+
+type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+  id: ID!
+  message: String
+  createdBy: String
+  talk: Talk @connection(name: "TalkComments")
+}
+```
+
+Run the server:
+
+```sh
+amplify mock
+```
+
+Click on the __auth__ button and add __Admin__ the user's groups.
+
+Now, you'll notice that only users in the __Admin__ group can create, update, or delete a talk, but anyone can read it.
+
 ## Lambda GraphQL Resolvers
 
 Next, let's have a look at how to deploy a serverless function and use it as a GraphQL resolver.
