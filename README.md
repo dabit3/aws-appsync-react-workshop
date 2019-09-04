@@ -480,7 +480,7 @@ We can access the user's info now that they are signed in by calling `Auth.curre
 
 ```js
 import React, { useEffect } from 'react'
-import { Auth } from 'aws-amplify'
+import {API, graphqlOperation, /* new 👉 */ Auth} from 'aws-amplify'
 
 useEffect(() => {
   Auth.currentAuthenticatedUser()
