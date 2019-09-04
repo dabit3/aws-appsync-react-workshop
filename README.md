@@ -446,7 +446,8 @@ To add authentication, we can use the following command:
 amplify add auth
 
 ? Do you want to use default authentication and security configuration? Default configuration 
-? How do you want users to be able to sign in when using your Cognito User Pool? Username   
+? How do you want users to be able to sign in when using your Cognito User Pool? Username
+? Do you want to configure advanced settings? No, I am done.   
 ```
 
 ### Using the withAuthenticator component
