@@ -480,7 +480,7 @@ We can access the user's info now that they are signed in by calling `Auth.curre
 
 ```js
 import React, { useEffect } from 'react'
-import { Auth } from 'aws-amplify'
+import {API, graphqlOperation, /* new 👉 */ Auth} from 'aws-amplify'
 
 useEffect(() => {
   Auth.currentAuthenticatedUser()
@@ -588,7 +588,7 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 }
 ```
 
-Becuase we're updating the way our database is configued by adding relationships which requires a global secondary index, we need to delete the old database:
+Because we're updating the way our database is configued by adding relationships which requires a global secondary index, we need to delete the old database:
 
 ```sh
 rm -r amplify/mock-data
