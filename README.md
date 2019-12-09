@@ -471,10 +471,11 @@ Next we need to update the AppSync API to now use the newly created Cognito Auth
 To do so, we'll reconfigure the API:
 
 ```sh
-$ amplify configure api
+$ amplify update api
 
 ? Please select from one of the below mentioned services: GraphQL   
-? Choose an authorization type for the API: Amazon Cognito User Pool
+? Choose the default authorization type for the API: Amazon Cognito User Pool
+? Do you want to configure advanced settings for the GraphQL API: No, I am done
 ```
 
 Next, we'll test out the API with authentication enabled:
