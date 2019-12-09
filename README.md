@@ -28,23 +28,16 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 To get started, we first need to create a new React project using the [Create React App CLI](https://github.com/facebook/create-react-app).
 
 ```bash
-npm install -g create-react-app
-create-react-app my-amplify-app
-```
-
-Or use npx (npm 5.2 & later) to create a new app:
-
-```bash
-npx create-react-app my-amplify-app
+$ npx create-react-app my-amplify-app
 ```
 
 Now change into the new app directory & install the AWS Amplify, AWS Amplify React, & uuid libraries:
 
 ```bash
-cd my-amplify-app
-npm install --save aws-amplify aws-amplify-react uuid
+$ cd my-amplify-app
+$ npm install --save aws-amplify aws-amplify-react uuid
 # or
-yarn add aws-amplify aws-amplify-react uuid
+$ yarn add aws-amplify aws-amplify-react uuid
 ```
 
 ## Installing the CLI & Initializing a new AWS Amplify Project
@@ -54,13 +47,13 @@ yarn add aws-amplify aws-amplify-react uuid
 Next, we'll install the AWS Amplify CLI:
 
 ```bash
-npm install -g @aws-amplify/cli
+$ npm install -g @aws-amplify/cli
 ```
 
 Now we need to configure the CLI with our credentials:
 
-```js
-amplify configure
+```sh
+$ amplify configure
 ```
 
 > If you'd like to see a video walkthrough of this configuration process, click [here](https://www.youtube.com/watch?v=fWbM5DLh25U).
@@ -77,7 +70,7 @@ Here we'll walk through the `amplify configure` setup. Once you've signed in to 
 ### Initializing A New Project
 
 ```bash
-amplify init
+$ amplify init
 ```
 
 - Enter a name for the project: __amplifyreactapp__
@@ -97,7 +90,7 @@ Now, the AWS Amplify CLI has iniatilized a new project & you will see a new fold
 To view the status of the amplify project at any time, you can run the Amplify `status` command:
 
 ```sh
-amplify status
+$ amplify status
 ```
 
 ### Configuring the React applicaion
@@ -121,7 +114,7 @@ Now, our app is ready to start using our AWS services.
 To add a GraphQL API, we can use the following command:
 
 ```sh
-amplify add api
+$ amplify add api
 
 ? Please select from one of the above mentioned services: GraphQL
 ? Provide API name: ConferenceAPI
@@ -150,7 +143,7 @@ type Talk @model {
 To mock and test the API locally, you can run the `mock` command:
 
 ```sh
-amplify mock api
+$ amplify mock api
 
 ? Choose the code generation language target: javascript
 ? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
@@ -443,7 +436,7 @@ useEffect(() => {
 To add authentication, we can use the following command:
 
 ```sh
-amplify add auth
+$ amplify add auth
 
 ? Do you want to use default authentication and security configuration? Default configuration 
 ? How do you want users to be able to sign in when using your Cognito User Pool? Username
@@ -469,7 +462,7 @@ export default withAuthenticator(App, { includeGreetings: true })
 To deploy the authentication service and mock and test the app locally, you can run the `mock` command:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 
 Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
@@ -496,7 +489,7 @@ Next we need to update the AppSync API to now use the newly created Cognito Auth
 To do so, we'll reconfigure the API:
 
 ```sh
-amplify configure api
+$ amplify configure api
 
 ? Please select from one of the below mentioned services: GraphQL   
 ? Choose an authorization type for the API: Amazon Cognito User Pool
@@ -505,7 +498,7 @@ amplify configure api
 Next, we'll test out the API with authentication enabled:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 Now, we can only access the API with a logged in user.
 
@@ -534,7 +527,7 @@ __allow:owner__ - This sets a field to only be readable or updatable by the crea
 Next, we'll test out the updated API:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 
 Now, the speakerPhone field will only be accessible by the creator of the item.
@@ -591,13 +584,13 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 Because we're updating the way our database is configued by adding relationships which requires a global secondary index, we need to delete the old database:
 
 ```sh
-rm -r amplify/mock-data
+$ rm -r amplify/mock-data
 ```
 
 Now, restart the server:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 
 Now, we can create relationships between talks and comments. Let's test this out with the following operations:
@@ -671,7 +664,7 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 Run the server:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 
 Click on the __auth__ button and add __Admin__ the user's groups.
@@ -689,7 +682,7 @@ The API we will be working with is the CoinLore API that will allow us to query 
 To get started, we'll create the new function:
 
 ```sh
-amplify add function
+$ amplify add function
 
 ? Provide a friendly name for your resource to be used as a label for this category in the project: currencyfunction
 ? Provide the AWS Lambda function name: currencyfunction
@@ -718,14 +711,15 @@ exports.handler = function (event, _, callback) {
 }
 ```
 
-In the above function we've used the [axios](https://github.com/axios/axios) library to call another API. In order to use axios, we need to install it in the function folder:
+In the above function we've used the [axios](https://github.com/axios/axios) library to call another API. In order to use __axios__, we need be sure that it will be installed by updating the package.json for the new function:
 
-```sh
-cd amplify/backend/function/currencyfunction/src
+__amplify/backend/function/currencyfunction/src/package.json__
 
-npm install axios
-
-cd ../../../../../
+```json
+"dependencies": {
+  // ...
+  "axios": "^0.19.0",
+},
 ```
 Next, we'll update the GraphQL schema to add a new type and query. In amplify/backend/api/ConferenceAPI/schema.graphql, update the schema with the following new types:
 
@@ -745,7 +739,7 @@ type Query {
 Now the schema has been updated and the Lambda function has been created. To test it out, you can run the mock command:
 
 ```sh
-amplify mock
+$ amplify mock
 ```
 
 In the query editor, run the following queries:
@@ -779,7 +773,7 @@ This query should return an array of cryptocurrency information.
 Next, let's deploy the AppSync GraphQL API and the Lambda function:
 
 ```bash
-amplify push
+$ amplify push
 
 ? Do you want to generate code for your newly created GraphQL API? Y
 ? Choose the code generation language target: javascript
@@ -791,13 +785,13 @@ amplify push
 To view the new AWS AppSync API at any time after its creation, run the following command:
 
 ```sh
-amplify console api
+$ amplify console api
 ```
 
 To view the Cognito User Pool at any time after its creation, run the following command:
 
 ```sh
-amplify console auth
+$ amplify console auth
 ```
 
 To test an authenticated API out in the AWS AppSync console, it will ask for you to __Login with User Pools__. The form will ask you for a __ClientId__. This __ClientId__ is located in __src/aws-exports.js__ in the `aws_user_pools_web_client_id` field.
@@ -809,15 +803,15 @@ The Amplify Console is a hosting service with continuous integration and continu
 The first thing we need to do is [create a new GitHub repo](https://github.com/new) for this project. Once we've created the repo, we'll copy the URL for the project to the clipboard & initialize git in our local project:
 
 ```sh
-git init
+$ git init
 
-git remote add origin git@github.com:username/project-name.git
+$ git remote add origin git@github.com:username/project-name.git
 
-git add .
+$ git add .
 
-git commit -m 'initial commit'
+$ git commit -m 'initial commit'
 
-git push origin master
+$ git push origin master
 ```
 
 Next we'll visit the Amplify Console in our AWS account at [https://us-east-1.console.aws.amazon.com/amplify/home](https://us-east-1.console.aws.amazon.com/amplify/home).
@@ -837,15 +831,15 @@ Now, we can push updates to Master to update our application.
 If at any time, or at the end of this workshop, you would like to delete a service from your project & your account, you can do this by running the `amplify remove` command:
 
 ```sh
-amplify remove auth
+$ amplify remove auth
 
-amplify push
+$ amplify push
 ```
 
 If you are unsure of what services you have enabled at any time, you can run the `amplify status` command:
 
 ```sh
-amplify status
+$ amplify status
 ```
 
 `amplify status` will give you the list of resources that are currently enabled in your app.
@@ -853,5 +847,5 @@ amplify status
 If you'd like to delete the entire project, you can run the `delete` command:
 
 ```sh
-amplify delete
+$ amplify delete
 ```
