@@ -378,7 +378,7 @@ class App extends React.Component {
 export default App
 ```
 
-### GraphQL Subscriptions
+<!-- ### GraphQL Subscriptions
 
 Next, let's see how we can create a subscription to subscribe to changes of data in our API.
 
@@ -410,7 +410,7 @@ componentDidMount() {
 componentWillUnmount() {
   this.subscription.unsubscribe()
 }
-```
+``` -->
 
 ## Adding Authentication
 
