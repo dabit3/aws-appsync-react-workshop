@@ -444,6 +444,8 @@ To deploy the authentication service and mock and test the app locally, you can 
 
 ```sh
 $ amplify mock
+
+? Are you sure you want to continue? Yes
 ```
 
 Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
