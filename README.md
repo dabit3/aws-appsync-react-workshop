@@ -491,7 +491,7 @@ $ amplify mock
 ```
 Now, we can only access the API with a logged in user.
 
-You'll also notice a new __auth__ button in the GraphiQL explorer that will allow you to update the simulated user.
+You'll notice an __auth__ button in the GraphiQL explorer that will allow you to update the simulated user and their groups.
 
 ### Fine Grained access control - Using the @auth directive
 
