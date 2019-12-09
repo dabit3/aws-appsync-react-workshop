@@ -527,6 +527,12 @@ You'll notice that the query returns an error if we request the `speakerPhone` f
 
 You'll also notice that the React app fails because the query for `listTalks` asks for the `speakerPhone` field. To fix this, remove the `speakerPhone` field from the `listTalks` query in __src/graphql/queries__.
 
+You can also remove the mock data at any time by deleting the __amplify/mock-data__ folder:
+
+```sh
+$ rm -rf amplify/mock-data
+```
+
 ###  GraphQL Type level authorization with the @auth directive
 
 What if you'd like to have a `Comment` type that could only be updated or deleted by the creator of the `Comment` but can be read by anyone?
@@ -570,7 +576,7 @@ type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "cr
 }
 ```
 
-Because we're updating the way our database is configued by adding relationships which requires a global secondary index, we need to delete the old database:
+Because we're updating the way our database is configured by adding relationships which requires a global secondary index, we need to delete the old database:
 
 ```sh
 $ rm -r amplify/mock-data
