@@ -540,17 +540,33 @@ What if you'd like to have a `Comment` type that could only be updated or delete
 We could use the following type:
 
 ```graphql
-type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+type Comment @model @auth(rules: [
+  { allow: owner, ownerField: "createdBy", operations: [create, update, delete]},
+  { allow: private, operations: [read] }
+  ]) {
   id: ID!
   message: String
   createdBy: String
 }
 ```
 
-__queries: null__ - This removes any authorization rules for queries, allowing anyone to query for talks.   
-__ownerField:createdBy__ - This sets the createdBy field as the currently signed in user.
+__allow: owner__ - This allows us to set owner authorization rules.   
+__allow: private__ - This allows us to set private authorization rules.   
 
 This would allow us to create comments that only the creator of the Comment could delete, but anyone could read.
+
+
+```graphql
+query listComments {
+  listComments {
+    items {
+      id
+      message
+      createdBy
+    }
+  }
+}
+```
 
 ### Relationships
 
@@ -568,7 +584,10 @@ type Talk @model {
   comments: [Comment] @connection(name: "TalkComments")
 }
 
-type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+type Comment @model @auth(rules: [
+  { allow: owner, ownerField: "createdBy", operations: [create, update, delete]},
+  { allow: private, operations: [read] }
+  ]) {
   id: ID!
   message: String
   createdBy: String
@@ -623,6 +642,7 @@ query listTalks {
       comments {
         items {
           message
+          createdBy
         }
       }
     }
@@ -648,7 +668,10 @@ type Talk @model @auth(rules: [{ allow: groups, groups: ["Admin"], queries: null
   comments: [Comment] @connection(name: "TalkComments")
 }
 
-type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+type Comment @model @auth(rules: [
+  { allow: owner, ownerField: "createdBy", operations: [create, update, delete]},
+  { allow: private, operations: [read] }
+  ]) {
   id: ID!
   message: String
   createdBy: String
