@@ -119,6 +119,9 @@ $ amplify add api
 ? Please select from one of the above mentioned services: GraphQL
 ? Provide API name: ConferenceAPI
 ? Choose an authorization type for the API: API key
+? Enter a description for the API key: <some description>
+? After how many days from now the API key should expire (1-365): 365
+? Do you want to configure advanced settings for the GraphQL API: No
 ? Do you have an annotated GraphQL schema? N 
 ? Do you want a guided schema creation? Y
 ? What best describes your project: Single object with fields
