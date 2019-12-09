@@ -271,6 +271,12 @@ export default App
 
 #### Feel free to add some styling here to your list if you'd like 😀
 
+Next, test the app locally:
+
+```sh
+$ npm start
+```
+
 ## Performing mutations
 
  Now, let's look at how we can create mutations.
