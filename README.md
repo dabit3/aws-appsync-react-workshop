@@ -525,7 +525,7 @@ To test it out, try creating a new user & accessing a talk from a different user
 
 You'll notice that the query returns an error if we request the `speakerPhone` field.
 
-You'll also notice that the React app fails because the query for `listTalks` asks for the `speakerPhone` field. To fix this, remove the `speakerPhone` field from the `listTalks` query in 'src/graphql/queries`.
+You'll also notice that the React app fails because the query for `listTalks` asks for the `speakerPhone` field. To fix this, remove the `speakerPhone` field from the `listTalks` query in __src/graphql/queries__.
 
 ###  GraphQL Type level authorization with the @auth directive
 
