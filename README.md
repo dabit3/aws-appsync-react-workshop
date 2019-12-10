@@ -657,7 +657,10 @@ If you'd like to read more about the `@auth` directive, check out the documentat
 The last problem we are facing is that *anyone* signed in can create a new talk. Let's add authorization that only allows users that are in an __Admin__ group to create and update talks.
 
 ```graphql
-type Talk @model @auth(rules: [{ allow: groups, groups: ["Admin"], queries: null }]) {
+type Talk @model @auth(rules: [
+  { allow: groups, groups: ["Admin"] },
+  { allow: private, operations: [read] }
+  ]) {
   id: ID!
   clientId: ID
   name: String!
