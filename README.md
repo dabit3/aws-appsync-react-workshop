@@ -277,6 +277,8 @@ class App extends React.Component {
 export default App
 ```
 
+In the above code we are using `API.graphql` to call the GraphQL API, and then taking the result from that API call and storing the data in our state. This should be the list of talks you created via the GraphiQL editor.
+
 #### Feel free to add some styling here to your list if you'd like 😀
 
 Next, test the app locally:
@@ -292,6 +294,8 @@ $ npm start
  To do so, we'll refactor our initial state in order to also hold our form fields and add an event handler.
 
  We'll also be using the `API` class from amplify again, but now will be passing a second argument to `graphqlOperation` in order to pass in variables: `API.graphql(graphqlOperation(CreateTalk, { input: talk }))`.
+
+ We also have state to work with the form inputs, for `name`, `description`, `speakerName`, and `speakerBio`.
 
 ```js
 // src/App.js
@@ -394,6 +398,8 @@ export default App
 
 ## Adding Authentication
 
+Next, let's update the app to add authentication.
+
 To add authentication, we can use the following command:
 
 ```sh
@@ -409,14 +415,14 @@ $ amplify add auth
 To add authentication in the React app, we'll go into __src/App.js__ and first import the `withAuthenticator` HOC (Higher Order Component) from `aws-amplify-react`:
 
 ```js
-// src/App.js
+// src/App.js, import the new component
 import { withAuthenticator } from 'aws-amplify-react'
 ```
 
 Next, we'll wrap our default export (the App component) with the `withAuthenticator` HOC:
 
 ```js
-// src/App.js
+// src/App.js, change the default export to this:
 export default withAuthenticator(App, { includeGreetings: true })
 ```
 
@@ -428,7 +434,14 @@ $ amplify mock
 ? Are you sure you want to continue? Yes
 ```
 
+Next, to test it out in the browser:
+
+```sh
+npm start
+```
+
 Now, we can run the app and see that an Authentication flow has been added in front of our App component. This flow gives users the ability to sign up & sign in.
+
 
 ### Accessing User Data
 
