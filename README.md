@@ -484,45 +484,7 @@ You'll notice an __auth__ button in the GraphiQL explorer that will allow you to
 
 ### Fine Grained access control - Using the @auth directive
 
-Next, let's add a field that can only be accessed by the user who created it.
-
-To do so, we'll update the schema to add the speakerPhone field. Here we attach the `@auth` directive to the speakerPhone field in the schema:
-
-```graphql
-type Talk @model {
-  id: ID!
-  clientId: ID
-  name: String!
-  description: String!
-  speakerName: String!
-  speakerBio: String!
-  speakerPhone: String @auth(rules: [{allow: owner}])
-}
-```
-
-__allow:owner__ - This sets a field to only be readable or updatable by the creator.
-
-Next, we'll test out the updated API:
-
-```sh
-$ amplify mock
-```
-
-Now, the speakerPhone field will only be accessible by the creator of the item.
-
-To test it out, try creating a new user & accessing a talk from a different user.
-
-You'll notice that the query returns an error if we request the `speakerPhone` field.
-
-You'll also notice that the React app fails because the query for `listTalks` asks for the `speakerPhone` field. To fix this, remove the `speakerPhone` field from the `listTalks` query in __src/graphql/queries__.
-
-You can also remove the mock data at any time by deleting the __amplify/mock-data__ folder:
-
-```sh
-$ rm -rf amplify/mock-data
-```
-
-###  GraphQL Type level authorization with the @auth directive
+####  GraphQL Type level authorization with the @auth directive
 
 What if you'd like to have a `Comment` type that could only be updated or deleted by the creator of the `Comment` but can be read by anyone?
 
@@ -569,7 +531,6 @@ type Talk @model {
   description: String!
   speakerName: String!
   speakerBio: String!
-  speakerPhone: String @auth(rules: [{allow: owner}])
   comments: [Comment] @connection(name: "TalkComments")
 }
 
@@ -584,7 +545,7 @@ type Comment @model @auth(rules: [
 }
 ```
 
-Because we're updating the way our database is configured by adding relationships which requires a global secondary index, we need to delete the old database:
+Because we're updating the way our database is configured by adding relationships which requires a global secondary index, we need to delete the old local database:
 
 ```sh
 $ rm -r amplify/mock-data
@@ -656,7 +617,6 @@ type Talk @model @auth(rules: [
   description: String!
   speakerName: String!
   speakerBio: String!
-  speakerPhone: String @auth(rules: [{allow: owner}])
   comments: [Comment] @connection(name: "TalkComments")
 }
 
