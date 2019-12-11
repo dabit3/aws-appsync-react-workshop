@@ -508,6 +508,21 @@ __allow: private__ - This allows us to set private authorization rules.
 
 This would allow us to create comments that only the creator of the Comment could delete, but anyone could read.
 
+Creating a comment:
+
+```graphql
+mutation createComment {
+  createComment(input:{
+    message: "Cool talk"
+  }) {
+    id
+    message
+    createdBy
+  }
+}
+```
+
+Listing comments:
 
 ```graphql
 query listComments {
@@ -520,6 +535,22 @@ query listComments {
   }
 }
 ```
+
+Updating a comment:
+
+```graphql
+mutation updateComment {
+  updateComment(input: {
+    id: "59d202f8-bfc8-4629-b5c2-bdb8f121444a"
+  }) {
+    id 
+    message
+    createdBy
+  }
+}
+```
+
+If you try to update a comment from someone else, you will get an unauthorized error.
 
 ### Relationships
 
