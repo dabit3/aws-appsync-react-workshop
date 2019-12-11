@@ -156,7 +156,13 @@ $ amplify mock api
 ? Enter maximum statement depth [increase from default if your schema is deeply nested]: 2
 ```
 
-This should open up the local GraphiQL editor.
+This should start an AppSync Mock endpoint:
+
+```sh
+AppSync Mock endpoint is running at http://10.219.99.136:20002
+```
+
+Open the endpoint in the browser to use the GraphiQL Editor.
 
 From here, we can now test the API.
 
