@@ -486,9 +486,11 @@ You'll notice an __auth__ button in the GraphiQL explorer that will allow you to
 
 ####  GraphQL Type level authorization with the @auth directive
 
+For authorization rules, we can start using the `@auth` directive.
+
 What if you'd like to have a `Comment` type that could only be updated or deleted by the creator of the `Comment` but can be read by anyone?
 
-We could use the following type:
+We could use the following updated type:
 
 ```graphql
 type Comment @model @auth(rules: [
