@@ -490,9 +490,11 @@ For authorization rules, we can start using the `@auth` directive.
 
 What if you'd like to have a new `Comment` type that could only be updated or deleted by the creator of the `Comment` but can be read by anyone?
 
-We could use the following type:
+We could add the following type to our GraphQL schema:
 
 ```graphql
+# amplify/backend/api/ConferenceAPI/schema.graphql
+
 type Comment @model @auth(rules: [
   { allow: owner, ownerField: "createdBy", operations: [create, update, delete]},
   { allow: private, operations: [read] }
@@ -557,6 +559,8 @@ If you try to update a comment from someone else, you will get an unauthorized e
 What if we wanted to create a relationship between the Comment and the Talk? That's pretty easy. We can use the `@connection` directive:
 
 ```graphql
+# amplify/backend/api/ConferenceAPI/schema.graphql
+
 type Talk @model {
   id: ID!
   clientId: ID
@@ -640,6 +644,8 @@ If you'd like to read more about the `@auth` directive, check out the documentat
 The last problem we are facing is that *anyone* signed in can create a new talk. Let's add authorization that only allows users that are in an __Admin__ group to create and update talks.
 
 ```graphql
+# amplify/backend/api/ConferenceAPI/schema.graphql
+
 type Talk @model @auth(rules: [
   { allow: groups, groups: ["Admin"] },
   { allow: private, operations: [read] }
