@@ -13,6 +13,7 @@ In this workshop we'll learn how to build cloud-enabled web applications with Re
 - [Lambda Resolvers](https://github.com/dabit3/aws-appsync-react-workshop#lambda-graphql-resolvers)
 - [Deploying the Services](https://github.com/dabit3/aws-appsync-react-workshop#deploying-the-services)
 - [Hosting with the Amplify Console](https://github.com/dabit3/aws-appsync-react-workshop#hosting-via-the-amplify-console)
+- [Amplify DataStore](https://github.com/dabit3/aws-appsync-react-workshop#amplify-datastore)
 - [Deleting the resources](https://github.com/dabit3/aws-appsync-react-workshop#removing-services)
 
 ## Redeeming the AWS Credit   
@@ -836,6 +837,10 @@ In the next screen, we'll create a new role & use this role to allow the Amplify
 Finally, we can click __Save and Deploy__ to deploy our application!
 
 Now, we can push updates to Master to update our application.
+
+## Amplify DataStore
+
+To implement a GraphQL API with Amplify DataStore, check out the tutorial [here](https://github.com/dabit3/amplify-datastore-example)
 
 ## Removing Services
 
