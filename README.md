@@ -445,12 +445,13 @@ Now, we can run the app and see that an Authentication flow has been added in fr
 
 ### Accessing User Data
 
-We can access the user's info now that they are signed in by calling `Auth.currentAuthenticatedUser()`.
+We can access the user's info now that they are signed in by calling `Auth.currentAuthenticatedUser()` in `componentDidMount`.
 
 ```js
 import {API, graphqlOperation, /* new 👉 */ Auth} from 'aws-amplify'
 
 async componentDidMount() {
+  // add this code to componentDidMount
   const user = await Auth.currentAuthenticatedUser()
   console.log('user:', user)
   console.log('user info:', user.signInUserSession.idToken.payload)
