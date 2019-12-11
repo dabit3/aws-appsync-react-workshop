@@ -131,6 +131,8 @@ $ amplify add api
 > When prompted, update the schema to the following:   
 
 ```graphql
+# amplify/backend/api/ConferenceAPI/schema.graphql
+
 type Talk @model {
   id: ID!
   clientId: ID
@@ -383,40 +385,6 @@ class App extends React.Component {
 
 export default App
 ```
-
-<!-- ### GraphQL Subscriptions
-
-Next, let's see how we can create a subscription to subscribe to changes of data in our API.
-
-To do so, we need to define the subscription, listen for the real-time data coming in from the subscription, & update the state whenever a new piece of data comes in.
-
-```js
-// import the subscription
-import { onCreateTalk as OnCreateTalk } from './graphql/subscriptions'
-
-// define the subscription in the class
-subscription = {}
-
-// subscribe in componentDidMount
-componentDidMount() {
-  this.subscription = API.graphql(
-    graphqlOperation(OnCreateTalk)
-  ).subscribe({
-      next: (eventData) => {
-        console.log('eventData', eventData)
-        const talk = eventData.value.data.onCreateTalk
-        if (talk.clientId === CLIENT_ID) return
-        const talks = [ ...this.state.talks, talk ]
-        this.setState({ talks })
-      }
-  })
-}
-
-// unsubscribe in componentWillUnmount
-componentWillUnmount() {
-  this.subscription.unsubscribe()
-}
-``` -->
 
 ## Adding Authentication
 
@@ -872,3 +840,37 @@ If you'd like to delete the entire project, you can run the `delete` command:
 ```sh
 $ amplify delete
 ```
+
+<!-- ### GraphQL Subscriptions
+
+Next, let's see how we can create a subscription to subscribe to changes of data in our API.
+
+To do so, we need to define the subscription, listen for the real-time data coming in from the subscription, & update the state whenever a new piece of data comes in.
+
+```js
+// import the subscription
+import { onCreateTalk as OnCreateTalk } from './graphql/subscriptions'
+
+// define the subscription in the class
+subscription = {}
+
+// subscribe in componentDidMount
+componentDidMount() {
+  this.subscription = API.graphql(
+    graphqlOperation(OnCreateTalk)
+  ).subscribe({
+      next: (eventData) => {
+        console.log('eventData', eventData)
+        const talk = eventData.value.data.onCreateTalk
+        if (talk.clientId === CLIENT_ID) return
+        const talks = [ ...this.state.talks, talk ]
+        this.setState({ talks })
+      }
+  })
+}
+
+// unsubscribe in componentWillUnmount
+componentWillUnmount() {
+  this.subscription.unsubscribe()
+}
+``` -->
