@@ -94,7 +94,7 @@ To view the status of the amplify project at any time, you can run the Amplify `
 $ amplify status
 ```
 
-### Configuring the React applicaion
+### Configuring the React application
 
 Now, our resources are created & we can start using them!
 
